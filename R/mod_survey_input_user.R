@@ -44,7 +44,7 @@ mod_survey_input_user_ui <- function(id){
 #' @noRd 
 mod_survey_input_user_server <- function(input, output, session, values){
   ns <- session$ns
-  survey <- config::get(file = "conf/survey_input_config.yml")[["psorcast_plaque"]]
+  survey <- config::get(file = "conf/survey_input_config.yml")[[golem::get_golem_options("annotator_config")]]
   
   #' change this  
   status_vec <- purrr::map(
