@@ -1,0 +1,44 @@
+default:
+    mpower_gait:
+        synID:
+            parent_output: "syn25258905"
+            tbl: "syn12514611" 
+        output_filename: "annotator_test.tsv"
+        column_target:
+            column1: "walk_motion.json"
+        unique_identifier: "recordId" # unique identifier for that file in synapse table
+        n_batch: 5
+        keep_metadata:
+            column1: "recordId"
+            column2: "healthCode"
+            column3: "createdOn"
+            column4: "phoneInfo"
+    psorcast_plaque:
+        synID:
+            parent_output: "syn25258905"
+            tbl: "syn22281748" 
+        output_filename: "annotator_psorcast_test.tsv"
+        column_target:
+            column1: "psoriasisAreaPhoto.jpg"
+            column2: "psoriasisAreaPhoto.png"
+        unique_identifier: "recordId" # unique identifier for that file in synapse table
+        n_batch: 5
+        keep_metadata:
+            column1: "participantID"
+            column2: "createdOn"
+    psorcast_hand:
+        synID:
+            parent_output: "syn25258905"
+            tbl: "syn22281749" 
+        output_filename: "annotator_psorcast_test.tsv"
+        column_target:
+            column1: "rightHand.png"
+            column2: "leftHand.png"
+            column3: "rightHand.jpg"
+            column4: "leftHand.jpg"
+        unique_identifier: "recordId" # unique identifier for that file in synapse table
+        n_batch: 5
+        keep_metadata:
+            column1: "participantID"
+            column2: "createdOn"
+    
