@@ -59,18 +59,18 @@ app_ui <- function(request) {
                        "save", "Save My Results"))
                  )
         ),
-        # fluidRow(
-        #   conditionalPanel(
-        #     'input.dataset === "image-metadata"',
-        #   ),
-        #   conditionalPanel(
-        #     'input.dataset === "additional-info"',
-        #   ),
-        #   
-        #   tabsetPanel(id = 'dataset', 
-        #               tabPanel("image-metadata", DT::dataTableOutput("mytable")),
-        #               tabPanel("additional-info", DT::dataTableOutput("featuretable"))),
-        # )
+        fluidRow(
+          conditionalPanel(
+            'input.dataset === "image-metadata"',
+          ),
+          conditionalPanel(
+            'input.dataset === "additional-info"',
+          ),
+
+          tabsetPanel(id = 'dataset',
+                      tabPanel("image-metadata", DT::dataTableOutput("mytable")),
+                      tabPanel("additional-info", DT::dataTableOutput("featuretable"))),
+        )
       )
     ),
     ## waiter loading screen

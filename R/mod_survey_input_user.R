@@ -11,30 +11,54 @@
 #' @inerit
 mod_survey_input_user_ui <- function(id){
   ns <- NS(id)
-  survey <- config::get(file = "conf/survey_input_config.yml")[[golem::get_golem_options("annotator_config")]]
+  
+  #' read config file
+  config_path <- file.path("conf", golem::get_golem_options("annotator_config"))
+  survey_config <- config::get(file = config_path) %>% .$survey_opts
+  
+  #' create based on config
   tagList(
     purrr::map(
-      survey,
+      survey_config,
       function(x){
         choices <- x$input_choices %>% 
           base::unlist() %>%
           setNames(NULL)
         prompt <- x$prompt
-        initial_choice <- x$input_choices$initial_choice
         colname <- x$colname
+        buttonType <- x$type
         
-        #' set button
-        radioGroupButtons(
-          size = 'sm',
-          inputId = ns(colname),
-          selected = initial_choice,
-          label = h4(prompt),
-          choiceNames = choices,
-          choiceValues = choices,
-          checkIcon = list(
-            yes = icon("ok", 
-                       lib = "glyphicon"))
-        )
+        if(buttonType == "radio"){
+          #' set button
+          radioGroupButtons(
+            size = 'sm',
+            inputId = ns(colname),
+            selected = "None Selected",
+            label = h4(prompt),
+            choiceNames = c("None Selected", choices),
+            choiceValues = c("None Selected", choices),
+            checkIcon = list(
+              yes = icon("ok", lib = "glyphicon")))
+        }else if(buttonType == "select"){
+          pickerInput(ns(colname),
+                      h4(prompt), 
+                      choices = choices, 
+                      options = list(`actions-box` = TRUE), 
+                      multiple = TRUE)
+        }else if(buttonType == "slider"){
+          sliderTextInput(
+            ns(colname),
+            h4(prompt), 
+            choices = c(
+              seq(x$input_choices$choice_min, 
+                  x$input_choices$choice_max, 
+                  x$input_choices$increments)),
+            grid = TRUE,
+            force_edges = TRUE
+          )
+        }else{
+          stop("Please parse in button UI")
+        }
       }
     )
   )
@@ -44,18 +68,20 @@ mod_survey_input_user_ui <- function(id){
 #' @noRd 
 mod_survey_input_user_server <- function(input, output, session, values){
   ns <- session$ns
-  survey <- config::get(file = "conf/survey_input_config.yml")[[golem::get_golem_options("annotator_config")]]
+  
+  config_path <- file.path("conf", golem::get_golem_options("annotator_config"))
+  survey_config <- config::get(file = config_path) %>% .$survey_opts
   
   #' change this  
   status_vec <- purrr::map(
-    survey, function(x){
+    survey_config, function(x){
     x$colname}) %>% 
     purrr::reduce(., c)
   
   #' change input
   purrr::walk(status_vec, function(status){
     observeEvent(input[[status]], {
-      values$userInput[[status]] <- input[[status]]
+      values$userInput[[status]] <- glue::glue_collapse(input[[status]], sep = ", ")
     })
   })
 }

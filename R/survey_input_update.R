@@ -1,14 +1,22 @@
-update_buttons <- function(session, values){
+update_buttons <- function(session, 
+                           data, 
+                           curr_index,
+                           survey_config){
     select_view_ns <- NS("ui_1")
-    survey <- config::get(file = "conf/survey_input_config.yml")[[golem::get_golem_options("annotator_config")]]
-    purrr::walk(survey, function(col){
-        colname <- col$colname
-        initial_choice <- col$input_choices$initial_choice
-        updateRadioGroupButtons(session, 
-                                select_view_ns(colname), 
-                                selected = ifelse(
-                                    is.na(values$useDf[[colname]][values$ii]), 
-                                    initial_choice, 
-                                    values$useDf[[colname]][values$ii]))
+    purrr::map(survey_config, function(survey){
+        if(survey$type == "radio"){
+            updateRadioGroupButtons(session, 
+                                    select_view_ns(survey$colname), 
+                                    selected = ifelse(
+                                        is.na(data[[survey$colname]][curr_index]), 
+                                        "None Selected", 
+                                        data[[survey$colname]][curr_index]))
+        }else if(survey$type == "select"){
+            updatePickerInput(session, 
+                              select_view_ns(survey$colname), 
+                              selected = character(0))
+        }else{
+            stop("")
+        }
     })
 }

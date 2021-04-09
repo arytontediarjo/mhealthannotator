@@ -8,20 +8,31 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   syn <- synapseclient$Synapse()
-  synapse_config <- config::get(file = "conf/synapse_input_config.yml")[[golem::get_golem_options("annotator_config")]]
-  survey_config <- config::get(file = "conf/survey_input_config.yml")[[golem::get_golem_options("annotator_config")]]
   
-  #' read configuratiton 
-  filehandle_cols <- synapse_config$column_target %>% 
+  config_path <- file.path(
+    "conf", golem::get_golem_options("annotator_config"))
+  config <- config::get(file = config_path)
+  
+  #' read synapse configuratiton 
+  filehandle_cols <- config$synapse_opts$column_target %>% 
     unlist(.) %>% 
     setNames(NULL)
-  synapse_tbl <- synapse_config$synID$tbl
-  n_batch <- synapse_config$n_batch
-  uid <- synapse_config$unique_identifier
-  keep_metadata <- synapse_config$keep_metadata %>% unlist(.) %>% setNames(NULL)
-  output_parent_id <- synapse_config$synID$parent_output
-  survey_colnames <- survey_config %>% 
+  synapse_tbl <- config$synapse_opts$synID$tbl
+  n_batch <- config$synapse_opts$n_batch
+  uid <- config$synapse_opts$unique_identifier
+  keep_metadata <- config$synapse_opts$keep_metadata %>% unlist(.) %>% setNames(NULL)
+  output_parent_id <- config$synapse_opts$synID$parent_output
+  output_filename <- config$synapse_opts$output_filename
+  
+  #' read survey configuration
+  survey_colnames <- config$survey_opts %>% 
     purrr::map(function(survey){survey$colname}) %>% 
+    base::unlist() %>% 
+    purrr::set_names(NULL)
+  
+  #' read survey configuration
+  button_type <- config$survey_opts %>% 
+    purrr::map(function(survey){survey$type}) %>% 
     base::unlist() %>% 
     purrr::set_names(NULL)
   
@@ -59,7 +70,7 @@ app_server <- function( input, output, session ) {
         #' update data after updating session
         values$currentAnnotator <- get_current_annotator(syn)
         values$fileName <- get_output_filename(
-          filename = synapse_config$output_filename,
+          filename = output_filename,
           annotator = values$currentAnnotator)
         
         #' get all data and previous data
@@ -204,7 +215,11 @@ app_server <- function( input, output, session ) {
   #################
   observeEvent(input$goNext, {
     values$useDf <- values$useDf %>%
-      survey_input_store(index = values$ii, user_input = values$userInput)
+      survey_input_store(curr_index = values$ii, 
+                         user_inputs = values$userInput,
+                         survey_colnames = survey_colnames,
+                         keep_metadata = keep_metadata,
+                         uid = uid)
     callModule(mod_render_image_server, "render_image_ui_1",
                obj_path = values$useDf$imagePath[values$ii])
     total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
@@ -224,7 +239,11 @@ app_server <- function( input, output, session ) {
       tmpI <- values$ii + 1
     }
     values$ii <- tmpI
-    update_buttons(session = session, values = values)
+    values$userInput <- list()
+    update_buttons(session = session, 
+                   data = values$useDf, 
+                   curr_index = values$ii,
+                   survey_config = config$survey_opts)
   })
 
   #################
@@ -232,9 +251,14 @@ app_server <- function( input, output, session ) {
   ##################
   observeEvent(input$goPrev, {
     values$useDf <- values$useDf %>%
-      survey_input_store(index = values$ii, user_input = values$userInput)
-    callModule(mod_render_image_server, "render_image_ui_1",
-               obj_path = values$useDf$imagePath[values$ii])
+      survey_input_store(curr_index = values$ii, 
+                         user_inputs = values$userInput,
+                         survey_colnames = survey_colnames,
+                         keep_metadata = keep_metadata,
+                         uid = uid)
+    callModule(
+      mod_render_image_server, "render_image_ui_1",
+      obj_path = values$useDf$imagePath[values$ii])
     total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
     if((total_curated == values$numImages) & !values$postConfirm){
       ask_confirmation(
@@ -251,7 +275,11 @@ app_server <- function( input, output, session ) {
       tmpI <- values$useDf %>% nrow(.)
     }
     values$ii <- tmpI
-    update_buttons(session = session, values = values)
+    values$userInput <- list()
+    update_buttons(session = session, 
+                   data = values$useDf, 
+                   curr_index = values$ii,
+                   survey_config = config$survey_opts)
   })
 
   ##################################
@@ -282,14 +310,14 @@ app_server <- function( input, output, session ) {
   ##################################
   #' render data table
   ##################################
-  # output$mytable = DT::renderDataTable({
-  #   data <- values$useDf[values$ii,] %>% 
-  #     dplyr::select(keep_metadata)
-  #   DT::datatable(data, options = list(searching = FALSE, 
-  #                                  lengthChange= FALSE))
-  # })
+  output$mytable = DT::renderDataTable({
+    data <- values$useDf[values$ii,] %>%
+      dplyr::select(all_of(keep_metadata), all_of(survey_colnames))
+    DT::datatable(data, options = list(searching = FALSE,
+                                    lengthChange= FALSE))
+  })
   
   observe({
-    print(values$useDf)
+    print(values$userInput)
   })
 }
