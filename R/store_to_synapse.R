@@ -1,20 +1,26 @@
-store_to_synapse <- function(new_data, 
-                             prev_data, 
-                             current_annotator, 
-                             syn, synapseclient){
-    input_file <- "testing.tsv"
+store_to_synapse <- function(syn, 
+                             synapseclient,
+                             synapse_parent_id,
+                             new_data, 
+                             stored_data, 
+                             current_annotator,
+                             output_filename){
     new_data %>% 
         dplyr::mutate(
             annotator = current_annotator,
             createdOn = as.character(createdOn),
             annotationTimestamp = as.character(annotationTimestamp)) %>%
-        dplyr::full_join(prev_data) %>%
+        dplyr::full_join((stored_data %>%
+                             dplyr::mutate_all(.funs = as.character))) %>%
         tidyr::drop_na() %>%
-        write.table(input_file, 
+        dplyr::select(-imagePath) %>%
+        write.table(output_filename, 
                     sep = "\t", 
                     row.names=F, 
                     quote=F)
-    file <- synapseclient$File(input_file, parentId = "syn21627984")
+    file <- synapseclient$File(
+        output_filename, 
+        parentId = synapse_parent_id)
     syn$store(file)
-    unlink(input_file)
+    unlink(output_filename)
 }

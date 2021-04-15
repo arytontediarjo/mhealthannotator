@@ -33,23 +33,26 @@ mod_survey_input_user_ui <- function(id){
           radioGroupButtons(
             size = 'sm',
             inputId = ns(colname),
-            selected = "None Selected",
+            selected = character(0),
             label = h4(prompt),
-            choiceNames = c("None Selected", choices),
-            choiceValues = c("None Selected", choices),
+            choiceNames = choices,
+            choiceValues = choices,
             checkIcon = list(
               yes = icon("ok", lib = "glyphicon")))
         }else if(buttonType == "select"){
           pickerInput(ns(colname),
                       h4(prompt), 
                       choices = choices, 
-                      options = list(`actions-box` = TRUE), 
+                      options = list(`actions-box` = TRUE,
+                                     `none-selected-text` = "None Selected"), 
                       multiple = TRUE)
         }else if(buttonType == "slider"){
           sliderTextInput(
             ns(colname),
             h4(prompt), 
+            selected = "None Selected",
             choices = c(
+              "None Selected",
               seq(x$input_choices$choice_min, 
                   x$input_choices$choice_max, 
                   x$input_choices$increments)),
@@ -81,8 +84,13 @@ mod_survey_input_user_server <- function(input, output, session, values){
   #' change input
   purrr::walk(status_vec, function(status){
     observeEvent(input[[status]], {
-      values$userInput[[status]] <- glue::glue_collapse(input[[status]], sep = ", ")
-    })
+      if(is.null(input[[status]])){
+        values$userInput[[status]] <- "None Selected"
+      }else{
+        values$userInput[[status]] <- glue::glue_collapse(
+          input[[status]], sep = ", ")
+      }
+    }, ignoreNULL = FALSE)
   })
 }
     

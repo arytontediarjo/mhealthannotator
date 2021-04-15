@@ -65,7 +65,8 @@ batch_process_filehandles <- function(syn,
       (survey_tbl <- purrr::map_dfc(survey_colnames, function(x){
         tibble(!!sym(x) := as.character(NA))
       }))
-    )
+    ) %>%
+    dplyr::mutate(annotationTimestamp = NA_character_)
   return(result)
 }
     

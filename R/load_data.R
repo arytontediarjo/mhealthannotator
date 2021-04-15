@@ -32,15 +32,13 @@ get_prev_curated_images <- function(syn,
       dplyr::filter(fileName == stored_filename) %>%
       .$id %>% syn$get(.)
     data <- data.table::fread(file_entity$path, sep = "\t")
-    if(nrow(data) == 0){
-      return(schema)
-    }
     return(data)
   }, error = function(e){
     return(schema)
-  }) %>% 
-    dplyr::mutate_all(as.character)
-  return(image_data)
+  })
+  return(image_data %>% 
+           tibble::as_tibble() %>% 
+           dplyr::mutate_all(as.character))
 }
 
 #' @import tibble

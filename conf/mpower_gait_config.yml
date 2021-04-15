@@ -41,3 +41,13 @@ default:
                 choice_2: "limping2"
                 choice_3: "jumping"
                 choice_4: "running"
+        survey_4:
+            colname: "test_type"
+            type: "select"
+            prompt: "Walking type?"
+            input_choices:
+                choice_1: "limping"
+                choice_2: "limping2"
+                choice_3: "jumping"
+                choice_4: "running"
+        
