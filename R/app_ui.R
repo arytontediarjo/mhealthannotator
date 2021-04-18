@@ -58,6 +58,8 @@ app_ui <- function(request) {
                  )
         ),
         fluidRow(
+          br(),
+          br(),
           conditionalPanel(
             'input.dataset === "image-metadata"',
           ),

@@ -6,7 +6,8 @@ default:
         output_filename: "annotator_psorcast_test.tsv"
         column_targets:
             - "summaryImage.jpg"
-        unique_identifier: "recordId"
+        unique_identifier: 
+            - "recordId"
         n_batch: 5
         keep_metadata:
             - "participantID"
