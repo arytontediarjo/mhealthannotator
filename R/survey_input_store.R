@@ -15,17 +15,21 @@ survey_input_store <- function(data,
           !!sym(col) := ifelse(!!sym(uid) == curr_uid, 
                                user_inputs[[col]], 
                                !!sym(col))) %>%
-        dplyr::select(all_of(uid), all_of(keep_metadata), col, imagePath, annotationTimestamp)}) %>% 
+        dplyr::select(all_of(uid), 
+                      all_of(keep_metadata), 
+                      all_of(col),
+                      fileColumnName, 
+                      imagePath, 
+                      annotationTimestamp)}) %>% 
       purrr::reduce(dplyr::full_join) %>%
       dplyr::mutate(
-        annotationTimestamp = ifelse(!!sym(uid) == curr_uid, 
-                                     as.character(lubridate::now()), 
-                                     annotationTimestamp)
+        annotationTimestamp = ifelse(
+          !!sym(uid) == curr_uid, 
+          as.character(lubridate::now()), 
+          annotationTimestamp
+          )
       )
-  }, error = function(e){
-    print(e)
-    data
-  })
+  }, error = function(e){data})
 }
     
 ## To be copied in the UI

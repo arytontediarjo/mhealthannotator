@@ -26,7 +26,7 @@ get_image_batch <- function(syn,
       filePath = value) %>%
     dplyr::mutate(filePath = unlist(filePath)) %>%
     dplyr::inner_join(data, by = c("fileHandleId")) %>%
-    dplyr::select(all_of(keep_metadata), all_of(uid), filePath) %>%
+    dplyr::select(all_of(keep_metadata), all_of(uid), fileColumnName, filePath) %>%
     dplyr::mutate(
       imagePath = purrr::map_chr(
         filePath, 
@@ -52,7 +52,7 @@ batch_process_filehandles <- function(syn,
   result <- values$allDf %>%
     dplyr::anti_join(
       values$curatedDf,
-      by = c(uid))  %>%
+      by = c(uid, "fileColumnName"))  %>%
     get_image_batch(syn = syn,
                     data = .,
                     uid = uid,

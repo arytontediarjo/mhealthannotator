@@ -30,12 +30,11 @@ parse_synapse_opts <- function(config){
     synapse_config <- list()    
     
     #' read synapse configuratiton 
-    synapse_config$filehandle_cols <- config$synapse_opts$column_target %>% 
-        unlist(.) %>% setNames(NULL)
+    synapse_config$filehandle_cols <- config$synapse_opts$column_target
     synapse_config$synapse_tbl <- config$synapse_opts$synID$tbl
     synapse_config$n_batch <- config$synapse_opts$n_batch
     synapse_config$uid <- config$synapse_opts$unique_identifier
-    synapse_config$keep_metadata <- config$synapse_opts$keep_metadata %>% unlist(.) %>% setNames(NULL)
+    synapse_config$keep_metadata <- config$synapse_opts$keep_metadata
     synapse_config$output_parent_id <- config$synapse_opts$synID$parent_output
     synapse_config$output_filename <- config$synapse_opts$output_filename
     

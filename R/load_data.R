@@ -23,22 +23,24 @@ get_prev_curated_images <- function(syn,
     schema %>% 
       dplyr::mutate(!!sym(col) := as.character(NA))}) %>% 
     purrr::reduce(cbind) %>% 
+    dplyr::mutate(fileColumnName = as.character(NA)) %>%
     tibble::as_tibble()
   image_data <- tryCatch({
     file_entity <- syn$getChildren(parent = parent_id) %>% 
       reticulate::iterate(., f = function(x){
-        tibble::tibble(id = x$id, fileName = x$name)}) %>% 
+        tibble::tibble(id = x$id, 
+                       fileName = x$name)}) %>% 
       purrr::reduce(., rbind) %>%
       dplyr::filter(fileName == stored_filename) %>%
       .$id %>% syn$get(.)
-    data <- data.table::fread(file_entity$path, sep = "\t")
+    data <- data.table::fread(file_entity$path, sep = "\t") %>% 
+      tibble::as_tibble() %>%
+      dplyr::mutate_all(as.character)
     return(data)
   }, error = function(e){
     return(schema)
   })
-  return(image_data %>% 
-           tibble::as_tibble() %>% 
-           dplyr::mutate_all(as.character))
+  return(image_data)
 }
 
 #' @import tibble

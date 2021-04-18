@@ -33,7 +33,8 @@ app_ui <- function(request) {
         fluidRow(
           column(width = 3, infoBoxOutput("userBox", width = "300px")),
           column(width = 3, infoBoxOutput("progressBox", width = "300px")),
-          column(width = 3, infoBoxOutput("totalCurated", width = "300px"))),
+          column(width = 5, infoBoxOutput("totalCurated", width = "300px"))
+        ),
         br(),
         fluidRow(
           column(width = 6, mod_render_image_ui("render_image_ui_1")),
@@ -41,22 +42,19 @@ app_ui <- function(request) {
                  box(mod_survey_input_user_ui("ui_1"),
                      br(),
                      br(),
-                     div(style = "display:inline-block; float:left",
-                         actionButton("goPrev", "", 
-                                      icon = icon("arrow-left"),
-                                      width = "100px")),
-                     div(style = "display:inline-block; float:left",
-                         actionButton("goNext", "", 
-                                      icon = icon("arrow-right"),
-                                      width = "100px")),
-                     width = 100, height = 400),
-                 br(),
-                 div(style = "display:inline-block; float:right", 
-                     loadingButton(
-                       "refresh", "Refresh Session")),
-                 div(style = "display:inline-block; float:left", 
-                     loadingButton(
-                       "save", "Save My Results"))
+                     div(
+                       style = "display:inline-block; float:left",
+                       actionButton("goPrev", "", icon = icon("arrow-left"), 
+                                    width = "100px")),
+                     div(
+                       style = "display:inline-block; float:left",
+                       actionButton("goNext", "", icon = icon("arrow-right"), 
+                                    width = "100px")),
+                     div(style = "display:inline-block; float:right", 
+                         actionButton("save", "Save My Results",
+                                      icon = icon("cloud-upload"))),
+                     width = 100, 
+                     height = 400)
                  )
         ),
         fluidRow(
@@ -109,16 +107,6 @@ golem_add_external_resources <- function(){
   tags$head(
     shinyWidgets::useSweetAlert(),
     shinyjs::useShinyjs(),
-    shinybusy::add_busy_spinner(
-      spin = "circle",
-      color = "#112446",
-      timeout = 100,
-      position = c("bottom-right"),
-      onstart = TRUE,
-      margins = c(10, 10),
-      height = "50px",
-      width = "50px"
-    ),
     golem::favicon(),
     golem::activate_js(),
     bundle_resources(

@@ -21,9 +21,7 @@ mod_survey_input_user_ui <- function(id){
     purrr::map(
       survey_config,
       function(x){
-        choices <- x$input_choices %>% 
-          base::unlist() %>%
-          setNames(NULL)
+        choices <- x$input_choices
         prompt <- x$prompt
         colname <- x$colname
         buttonType <- x$type
@@ -35,8 +33,7 @@ mod_survey_input_user_ui <- function(id){
             inputId = ns(colname),
             selected = character(0),
             label = h4(prompt),
-            choiceNames = choices,
-            choiceValues = choices,
+            choices = choices,
             checkIcon = list(
               yes = icon("ok", lib = "glyphicon")))
         }else if(buttonType == "select"){
