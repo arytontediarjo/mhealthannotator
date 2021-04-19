@@ -11,3 +11,4 @@ six==1.13.0
 synapseclient==1.9.4
 urllib3==1.25.7
 wrapt==1.11.2
+pandas==1.1.5
