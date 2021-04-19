@@ -314,7 +314,11 @@ app_server <- function( input, output, session ) {
     
     #' show modal spinner
     shinybusy::show_modal_spinner(
-      text = h3("Please Wait... \nWe are uploading your data to Synapse."))
+      spin = "fading-circle",
+      text = shiny::tagList(
+        h3("Please Wait..."),
+        h4("We are uploading your data to Synapse."))
+    )
     
     #' save to synapse
     store_to_synapse(
@@ -327,7 +331,18 @@ app_server <- function( input, output, session ) {
       output_filename = values$fileName
     )
     
-    #' re-fetch all data
+    #' remove when done
+    Sys.sleep(2)
+    shinybusy::remove_modal_spinner()
+    
+    #' show modal spinner
+    shinybusy::show_modal_spinner(
+      spin = "fading-circle",
+      text = shiny::tagList(
+        h3("Please Wait..."),
+        h4("We are fetching more data..."))
+    )
+    
     #' get all data and previous data
     values$allDf <- get_all_image_source(
       syn = syn, 
@@ -347,123 +362,50 @@ app_server <- function( input, output, session ) {
       survey_colnames = synapse_config$survey_colnames
     )
     
-    #' refresh back to landing page when done with everything
+    #' refresh if ran out of images
     if(values$total_images == values$curatedDf %>% nrow()){
       shinyjs::refresh()
+    }else{
+      #' batch process filehandles
+      values$useDf <- batch_process_filehandles(
+        syn = syn,
+        values = values,
+        synapse_tbl = synapse_config$synapse_tbl,
+        filehandle_cols = synapse_config$filehandle_cols,
+        uid = synapse_config$uid, 
+        survey_colnames = survey_config$survey_colnames,
+        keep_metadata = synapse_config$keep_metadata,
+        n_batch = synapse_config$n_batch
+      )
+      
+      #' get number images
+      values$numImages <- values$useDf %>% nrow(.)
+      
+      #' update buttons
+      values <- update_buttons(
+        reactive_values = values,
+        session = session, 
+        curr_index = values$ii,
+        survey_colnames = survey_config$survey_colnames,
+        survey_types = survey_config$button_types)
+      
+      #' re-render image
+      callModule(mod_render_image_server, "render_image_ui_1",
+                 obj_path = values$useDf$imagePath[values$ii])
+      
+      #' remove when done
+      Sys.sleep(2)
+      shinybusy::remove_modal_spinner()
+      
+      #' send sweet alert
+      sendSweetAlert(
+        session = session,
+        title = "Session is updated!",
+        text = "We saved your previous session annotations to Synapse.",
+        type = "success"
+      )
     }
-    
-    #' batch process filehandles
-    values$useDf <- batch_process_filehandles(
-      syn = syn,
-      values = values,
-      synapse_tbl = synapse_config$synapse_tbl,
-      filehandle_cols = synapse_config$filehandle_cols,
-      uid = synapse_config$uid, 
-      survey_colnames = survey_config$survey_colnames,
-      keep_metadata = synapse_config$keep_metadata,
-      n_batch = synapse_config$n_batch
-    )
-    
-    #' get number images
-    values$numImages <- values$useDf %>% nrow(.)
-    
-    #' update buttons
-    values <- update_buttons(
-      reactive_values = values,
-      session = session, 
-      curr_index = values$ii,
-      survey_colnames = survey_config$survey_colnames,
-      survey_types = survey_config$button_types)
-    
-    #' re-render image
-    callModule(mod_render_image_server, "render_image_ui_1",
-               obj_path = values$useDf$imagePath[values$ii])
-    
-    #' remove when done
-    Sys.sleep(2)
-    shinybusy::remove_modal_spinner()
-    
-    #' send sweet alert
-    sendSweetAlert(
-      session = session,
-      title = "Session is updated!",
-      text = "We saved your previous session annotations to Synapse.",
-      type = "success"
-    )
-    
   })
-  
-  #' observeEvent(input$refresh, {
-  #'   
-  #'   #' set post confirmation
-  #'   values$postConfirm <- FALSE
-  #'   
-  #'   #' store to synapse
-  #'   store_to_synapse(
-  #'     syn = syn,
-  #'     synapseclient = synapseclient,
-  #'     synapse_parent_id = synapse_config$output_parent_id,
-  #'     new_data = values$useDf,
-  #'     stored_data = values$curatedDf,
-  #'     current_annotator = values$currentAnnotator,
-  #'     output_filename = values$fileName
-  #'   )
-  #'   
-  #'   #' update data after updating session
-  #'   values$currentAnnotator <- get_current_annotator(syn)
-  #'   values$fileName <- get_output_filename(
-  #'     filename = synapse_config$output_filename,
-  #'     annotator = values$currentAnnotator)
-  #'   
-  #'   #' get all data and previous data
-  #'   values$allDf <- get_all_image_source(
-  #'     syn = syn, 
-  #'     filehandle_cols = synapse_config$filehandle_cols,
-  #'     synapse_tbl = synapse_config$synapse_tbl)
-  #'   
-  #'   #' get total images needed to be curatetd
-  #'   values$total_images <- values$allDf %>% nrow()
-  #'   
-  #'   #' get previous image that has been curated
-  #'   values$curatedDf <- get_prev_curated_images(
-  #'     syn = syn,
-  #'     parent_id = synapse_config$output_parent_id,
-  #'     stored_filename = values$fileName,
-  #'     uid = synapse_config$uid,
-  #'     keep_metadata = synapse_config$keep_metadata,
-  #'     survey_colnames = synapse_config$survey_colnames
-  #'   )
-  #'   
-  #'   #' batch process filehandles
-  #'   values$useDf <- batch_process_filehandles(
-  #'     syn = syn,
-  #'     values = values,
-  #'     synapse_tbl = synapse_config$synapse_tbl,
-  #'     filehandle_cols = synapse_config$filehandle_cols,
-  #'     uid = synapse_config$uid, 
-  #'     survey_colnames = survey_config$survey_colnames,
-  #'     keep_metadata = synapse_config$keep_metadata,
-  #'     n_batch = synapse_config$n_batch
-  #'   )
-  #'   
-  #'   #' get number images
-  #'   values$numImages <- values$useDf %>% nrow(.)
-  #'   Sys.sleep(3)
-  #'   resetLoadingButton("refresh")
-  #'   sendSweetAlert(
-  #'     session = session,
-  #'     title = "Session is updated!",
-  #'     text = "We saved your previous session annotations to Synapse.",
-  #'     type = "success"
-  #'   )
-  #'   values <- update_buttons(
-  #'     reactive_values = values,
-  #'     session = session, 
-  #'     curr_index = values$ii,
-  #'     survey_colnames = survey_config$survey_colnames,
-  #'     survey_types = survey_config$button_types)
-  #' })
-  
   
   ##################################
   #' render data table

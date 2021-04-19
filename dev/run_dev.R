@@ -11,4 +11,4 @@ golem::document_and_reload()
 # Run the application
 run_app(
     annotator_config = "conf/psorcast_nail_config.yml",
-    visual_funs = visualize_psorcast_photo)
+    visual_funs = visualize_photo)

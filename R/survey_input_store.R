@@ -9,10 +9,12 @@ survey_input_store <- function(data,
                                uid){
   tryCatch({
     curr_uid <- data[[uid]][curr_index]
+    curr_fileColumnName <- data$fileColumnName[curr_index]
     purrr::map(survey_colnames, function(col){
       data %>% 
         dplyr::mutate(
-          !!sym(col) := ifelse(!!sym(uid) == curr_uid, 
+          !!sym(col) := ifelse((!!sym(uid) == curr_uid &
+                                 fileColumnName == curr_fileColumnName), 
                                user_inputs[[col]], 
                                !!sym(col))) %>%
         dplyr::select(all_of(uid), 
@@ -24,7 +26,8 @@ survey_input_store <- function(data,
       purrr::reduce(dplyr::full_join) %>%
       dplyr::mutate(
         annotationTimestamp = ifelse(
-          !!sym(uid) == curr_uid, 
+          (!!sym(uid) == curr_uid &
+             fileColumnName == curr_fileColumnName), 
           as.character(lubridate::now()), 
           annotationTimestamp
           )

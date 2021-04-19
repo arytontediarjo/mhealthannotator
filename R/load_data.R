@@ -28,8 +28,9 @@ get_prev_curated_images <- function(syn,
   image_data <- tryCatch({
     file_entity <- syn$getChildren(parent = parent_id) %>% 
       reticulate::iterate(., f = function(x){
-        tibble::tibble(id = x$id, 
-                       fileName = x$name)}) %>% 
+        tibble::tibble(
+          id = x$id, 
+          fileName = x$name)}) %>% 
       purrr::reduce(., rbind) %>%
       dplyr::filter(fileName == stored_filename) %>%
       .$id %>% syn$get(.)
