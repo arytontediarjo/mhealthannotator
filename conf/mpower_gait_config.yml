@@ -1,13 +1,13 @@
 default:
     synapse_opts:
         synID:
-            parent_output: "syn25258905"
+            parent_output: "syn22311179"
             tbl: "syn12514611" 
         output_filename: "annotator_test.tsv"
         column_target:
             - "walk_motion.json"
         unique_identifier: 
-            - "recordId" # unique identifier for that file in synapse table
+            - "recordId"
         n_batch: 5
         keep_metadata:
             - "healthCode"

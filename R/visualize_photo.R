@@ -1,22 +1,25 @@
-change_png_to_jpeg <- function(filePath){
-    new_filePath <- sub('\\.png$', '.jpg', filePath)
-    png_mat <- png::readPNG(filePath)
-    jpeg::writeJPEG(png_mat, target = new_filePath, quality = 1)
-    file.remove(filePath)
-    return(new_filePath)
+parse_picture_to_jpeg <- function(filepath, user_dir){
+    file.copy(filepath, user_dir)
+    filepath <- file.path(user_dir, basename(filepath))
+    if(tools::file_ext(filepath) == "png"){
+        new_filepath <- sub('\\.png$', '.jpg', filepath)
+        png_mat <- png::readPNG(filepath)
+        jpeg::writeJPEG(png_mat, target = new_filepath, quality = 1)
+        file.remove(filepath)
+        return(new_filepath)
+    }else{
+        return(filepath)
+    }
 }
 
-
-visualize_photo <- function(filePath){
-    #' place your visualizer 
-    new_dir <- glue::glue("images")
-    if(!dir.exists(new_dir)){
-        dir.create(new_dir) 
-    }
-    file.copy(filePath, new_dir)
-    new_filePath <- file.path(new_dir, basename(filePath))
-    if(tools::file_ext(new_filePath) == "png"){
-        new_filePath <- change_png_to_jpeg(new_filePath)
-    }
-    return(new_filePath)
+visualize_photo <- function(filepath, curr_annotator){
+    #' create individual user directory
+    img_dir <- "user_images"
+    user_dir <- create_user_directory(img_dir, curr_annotator)
+    
+    #' parse your function here
+    filepath <- parse_picture_to_jpeg(filepath, user_dir)
+    
+    #' return image
+    return(filepath)
 }

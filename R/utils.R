@@ -41,3 +41,24 @@ parse_synapse_opts <- function(config){
     #' return list of values
     return(synapse_config)
 }
+
+
+create_user_directory <- function(img_dir, curr_annotator){
+    if(!dir.exists(img_dir)){
+        dir.create(img_dir) 
+    }
+    
+    #' create user directory
+    user_dir <- file.path(img_dir, curr_annotator)
+    if(!dir.exists(user_dir)){
+        dir.create(user_dir) 
+    }
+    return(user_dir)
+}
+
+
+clear_cache_and_directory <- function(){
+    ## clear all image & synapseCache
+    unlink("user_images/*", recursive = T, force = T)
+    unlink("~/.synapseCache/*", recursive = T, force = T)
+}

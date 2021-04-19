@@ -9,7 +9,8 @@ get_image_batch <- function(syn,
                             uid, 
                             keep_metadata,
                             n_batch,
-                            parallel = FALSE){
+                            parallel = FALSE,
+                            curr_annotator){
   get_subset <- data %>%
     dplyr::slice(1:n_batch) %>%
     .[[uid]] %>% 
@@ -26,10 +27,14 @@ get_image_batch <- function(syn,
       filePath = value) %>%
     dplyr::mutate(filePath = unlist(filePath)) %>%
     dplyr::inner_join(data, by = c("fileHandleId")) %>%
-    dplyr::select(all_of(keep_metadata), all_of(uid), fileColumnName, filePath) %>%
+    dplyr::select(all_of(keep_metadata), 
+                  all_of(uid), 
+                  fileColumnName, 
+                  filePath) %>%
     dplyr::mutate(
       imagePath = purrr::map_chr(
-        filePath, 
+        .x = filePath, 
+        curr_annotator = curr_annotator,
         .f = golem::get_golem_options("visual_funs"))) %>%
     dplyr::mutate_all(as.character) %>%
     tidyr::drop_na(any_of(c("imagePath")))
@@ -60,9 +65,11 @@ batch_process_filehandles <- function(syn,
                     filehandle_cols = filehandle_cols,
                     keep_metadata = keep_metadata,
                     n_batch = n_batch,
-                    parallel = FALSE) %>% 
+                    parallel = FALSE,
+                    curr_annotator = values$currentAnnotator) %>% 
     dplyr::bind_cols(
-      (survey_tbl <- purrr::map_dfc(survey_colnames, function(x){
+      (survey_tbl <- purrr::map_dfc(
+        survey_colnames, function(x){
         tibble(!!sym(x) := as.character(NA))
       }))
     ) %>%

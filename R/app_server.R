@@ -420,8 +420,7 @@ app_server <- function( input, output, session ) {
                                     lengthChange= FALSE))
   })
   
-  observe({
-    print(values$curatedDf)
-    print(values$useDf)
+  onStop(function() {
+    clear_cache_and_directory()
   })
 }
