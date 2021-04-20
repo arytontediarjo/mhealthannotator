@@ -1,8 +1,8 @@
 default:
   golem_name: mhealthannotator
   golem_version: 0.0.1
-  app_prod: yes
+  app_prod: no
 production:
   app_prod: yes
 dev:
-  golem_wd: !expr here::here()
+  golem_wd: /Users/atediarjo/Documents/SageBionetworks/mhealthannotator
