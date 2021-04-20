@@ -5,4 +5,5 @@ default:
 production:
   app_prod: yes
 dev:
-  golem_wd: /Users/atediarjo/Documents/SageBionetworks/mhealthannotator
+  golem_wd: !expr here::here()
+
