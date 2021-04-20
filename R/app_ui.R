@@ -113,7 +113,7 @@ golem_add_external_resources <- function(){
     golem::activate_js(),
     bundle_resources(
       path = app_sys('app/www'),
-      app_title = 'shinygolemtest'
+      app_title = 'mhealthannotator'
     ),
     tags$script(src = "www/readCookie.js")
     # Add here other external resources

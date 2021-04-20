@@ -1,6 +1,6 @@
 Package: mhealthannotator
 Title: mhealthtannotator
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: person('Aryton', 'Tediarjo', email = 'aryton.tediarjo@sagebase.org', role = c('cre', 'aut'))
 Description: This app is used for annotating images from Synapse.
 License: MIT + file LICENSE
