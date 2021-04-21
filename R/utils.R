@@ -42,6 +42,13 @@ parse_synapse_opts <- function(config){
     return(synapse_config)
 }
 
+parse_image_opts <- function(config){
+    image_config <- list()
+    image_config$width <- config$image_opts$width
+    image_config$height <- config$image_opts$height
+    return(image_config)
+}
+
 
 create_user_directory <- function(img_dir, curr_annotator){
     if(!dir.exists(img_dir)){

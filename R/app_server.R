@@ -16,11 +16,10 @@ app_server <- function( input, output, session ) {
     "conf", golem::get_golem_options("annotator_config"))
   config <- config::get(file = config_path)
   
-  #' read synapse configuratiton 
+  # parse all configuration type
   synapse_config <- config %>% parse_synapse_opts()
-  
-  #' read survey configuratation
   survey_config <- config %>% parse_survey_opts()
+  image_config <- config %>% parse_image_opts()
   
   #' define reactive values
   values <- reactiveValues(
@@ -215,7 +214,9 @@ app_server <- function( input, output, session ) {
              "ui_1", values = values)
   callModule(mod_render_image_server, 
              "render_image_ui_1",
-             obj_path = values$useDf$imagePath[values$ii])
+             obj_path = values$useDf$imagePath[values$ii],
+             input_width = image_config$width,
+             input_height = image_config$height)
 
   #################
   #' rended go forward button
@@ -230,8 +231,14 @@ app_server <- function( input, output, session ) {
         keep_metadata = synapse_config$keep_metadata,
         uid = synapse_config$uid
     )
-    callModule(mod_render_image_server, "render_image_ui_1",
-               obj_path = values$useDf$imagePath[values$ii])
+    
+    #' call module to render image
+    callModule(mod_render_image_server, 
+               "render_image_ui_1",
+               obj_path = values$useDf$imagePath[values$ii],
+               input_width = image_config$width,
+               input_height = image_config$height)
+    
     total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
     if((total_curated == values$numImages) & !values$postConfirm){
       ask_confirmation(
@@ -267,9 +274,11 @@ app_server <- function( input, output, session ) {
                          survey_colnames = survey_config$survey_colnames,
                          keep_metadata = synapse_config$keep_metadata,
                          uid = synapse_config$uid)
-    callModule(
-      mod_render_image_server, "render_image_ui_1",
-      obj_path = values$useDf$imagePath[values$ii])
+    callModule(mod_render_image_server, 
+               "render_image_ui_1",
+               obj_path = values$useDf$imagePath[values$ii],
+               input_width = image_config$width,
+               input_height = image_config$height)
     total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
     if((total_curated == values$numImages) & !values$postConfirm){
       ask_confirmation(
@@ -390,8 +399,11 @@ app_server <- function( input, output, session ) {
         survey_types = survey_config$button_types)
       
       #' re-render image
-      callModule(mod_render_image_server, "render_image_ui_1",
-                 obj_path = values$useDf$imagePath[values$ii])
+      callModule(mod_render_image_server, 
+                 "render_image_ui_1",
+                 obj_path = values$useDf$imagePath[values$ii],
+                 input_width = image_config$width,
+                 input_height = image_config$height)
       
       #' remove when done
       Sys.sleep(2)

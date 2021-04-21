@@ -17,13 +17,14 @@ mod_render_image_ui <- function(id){
 #' render_image Server Function
 #'
 #' @noRd 
-mod_render_image_server <- function(input, output, session, obj_path){
+mod_render_image_server <- function(input, output, 
+                                    session, obj_path,
+                                    input_width = 650,
+                                    input_height = 450){
   ns <- session$ns
   
   output$image <- renderImage({
     # set dynamic sizing
-    width  <- session$clientData$output_image_width 
-    height <- session$clientData$output_image_height
     pixelratio <- 2
     
     # A temp file to save the output.
@@ -33,8 +34,8 @@ mod_render_image_server <- function(input, output, session, obj_path){
     jpeg(outfile, res = 72*pixelratio)
     dev.off()
     list(src = obj_path,
-         height = "450px",
-         width  = "650px")
+         height = input_height,
+         width  = input_width)
   }, deleteFile=FALSE)
  
 }

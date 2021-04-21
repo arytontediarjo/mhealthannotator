@@ -50,6 +50,6 @@ default:
                 choice_min: 1
                 choice_max: 10
                 increments: 1
-    image_opts:
-        width: ""
-        height: ""
+    image_opts: 
+        width: "650px"
+        height: "450px"

@@ -33,5 +33,6 @@ default:
                 Partially in Pockett: "Partially in Pocket"
                 Not in Pocket: "Not in Pocket"
                 Can't Tell: "Can't Tell"
- 
-        
+    image_opts: 
+        width: "400px"
+        height: "450px"
