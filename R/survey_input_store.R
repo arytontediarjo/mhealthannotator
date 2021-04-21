@@ -10,28 +10,22 @@ survey_input_store <- function(data,
   tryCatch({
     curr_uid <- data[[uid]][curr_index]
     curr_fileColumnName <- data$fileColumnName[curr_index]
-    purrr::map(survey_colnames, function(col){
-      data %>% 
-        dplyr::mutate(
-          !!sym(col) := ifelse((!!sym(uid) == curr_uid &
-                                 fileColumnName == curr_fileColumnName), 
-                               user_inputs[[col]], 
-                               !!sym(col))) %>%
-        dplyr::select(all_of(uid), 
-                      all_of(keep_metadata), 
-                      all_of(col),
-                      fileColumnName, 
-                      imagePath, 
-                      annotationTimestamp)}) %>% 
-      purrr::reduce(dplyr::full_join) %>%
+    user_input_data <- user_inputs %>%
+      tibble::enframe(.) %>% 
+      dplyr::mutate(value = unlist(value)) %>%
+      tidyr::pivot_wider(name) %>%
       dplyr::mutate(
-        annotationTimestamp = ifelse(
-          (!!sym(uid) == curr_uid &
-             fileColumnName == curr_fileColumnName), 
-          as.character(lubridate::now()), 
-          annotationTimestamp
-          )
-      )
+        !!sym(uid) := curr_uid,
+          fileColumnName = curr_fileColumnName,
+          annotationTimestamp = as.character(lubridate::now()))
+    data %>% 
+      dplyr::rows_update(user_input_data, by = c(uid, "fileColumnName")) %>%
+      dplyr::select(all_of(uid), 
+                    all_of(keep_metadata), 
+                    all_of(survey_colnames),
+                    fileColumnName, 
+                    imagePath, 
+                    annotationTimestamp)
   }, error = function(e){data})
 }
     
