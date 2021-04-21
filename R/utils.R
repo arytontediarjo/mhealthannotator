@@ -64,8 +64,9 @@ create_user_directory <- function(img_dir, curr_annotator){
 }
 
 
-clear_cache_and_directory <- function(){
+clear_cache_and_directory <- function(annotator){
     ## clear all image & synapseCache
-    unlink("user_images/*", recursive = T, force = T)
+    unlink(glue::glue("user_images/{annotator}/*"), 
+           recursive = T, force = T)
     unlink("~/.synapseCache/*", recursive = T, force = T)
 }

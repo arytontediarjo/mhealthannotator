@@ -433,6 +433,7 @@ app_server <- function( input, output, session ) {
   })
   
   onStop(function() {
-    clear_cache_and_directory()
+    #' save to synapse
+    clear_cache_and_directory(annotator = isolate(values$currentAnnotator))
   })
 }
