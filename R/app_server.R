@@ -452,10 +452,6 @@ app_server <- function( input, output, session ) {
                                     lengthChange= FALSE))
   })
   
-  onStop(function() {
-    clear_cache_and_directory("user_dir", isolate(values$currentAnnotator))
-  })
-  
   observe({
     print(values$useDf)
   })
