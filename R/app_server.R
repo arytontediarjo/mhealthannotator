@@ -443,6 +443,7 @@ app_server <- function( input, output, session ) {
     data <- values$useDf[values$ii,] %>%
       dplyr::select(all_of(synapse_config$keep_metadata), 
                     all_of(survey_config$survey_colnames),
+                    filePath,
                     fileColumnName,
                     annotationTimestamp)
     DT::datatable(data, options = list(searching = FALSE,
