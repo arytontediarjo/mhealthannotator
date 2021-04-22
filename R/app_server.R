@@ -54,6 +54,9 @@ app_server <- function( input, output, session ) {
       tryCatch({
         syn$login(sessionToken = input$cookie, rememberMe = FALSE)
         
+        #' clear directory
+        clear_cache_and_directory(annotator = values$currentAnnotator)
+        
         #' update data after updating session
         values$currentAnnotator <- get_current_annotator(syn)
         values$fileName <- get_output_filename(
@@ -430,10 +433,5 @@ app_server <- function( input, output, session ) {
                     annotationTimestamp)
     DT::datatable(data, options = list(searching = FALSE,
                                     lengthChange= FALSE))
-  })
-  
-  onStop(function() {
-    #' save to synapse
-    clear_cache_and_directory(annotator = isolate(values$currentAnnotator))
   })
 }
