@@ -54,14 +54,14 @@ app_server <- function( input, output, session ) {
       tryCatch({
         syn$login(sessionToken = input$cookie, rememberMe = FALSE)
         
-        #' clear directory
-        clear_cache_and_directory(annotator = values$currentAnnotator)
-        
         #' update data after updating session
         values$currentAnnotator <- get_current_annotator(syn)
         values$fileName <- get_output_filename(
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
+        
+        #' clear directory
+        clear_cache_and_directory(annotator = values$currentAnnotator)
         
         #' get all data and previous data
         values$allDf <- get_all_image_source(
