@@ -398,10 +398,12 @@ app_server <- function( input, output, session ) {
         survey_colnames = survey_config$survey_colnames,
         keep_metadata = synapse_config$keep_metadata,
         n_batch = synapse_config$n_batch,
-        download_location = glue::glue("user_dir/{annotator}/downloaded_files",
+        download_location = glue::glue(here::here(),
+                                       "/{project_location}/user_dir/{annotator}/downloaded_files",
                                        annotator = values$currentAnnotator),
-        output_location = glue::glue("user_dir/{annotator}/processed_files",
-                                       annotator = values$currentAnnotator)
+        output_location = glue::glue(here::here(),
+                                     "/{project_location}/user_dir/{annotator}/processed_files",
+                                     annotator = values$currentAnnotator)
       )
       
       #' get number images
@@ -452,5 +454,9 @@ app_server <- function( input, output, session ) {
   
   onStop(function() {
     clear_cache_and_directory("user_dir", isolate(values$currentAnnotator))
+  })
+  
+  observe({
+    print(values$useDf)
   })
 }
