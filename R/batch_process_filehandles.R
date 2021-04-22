@@ -58,9 +58,6 @@ batch_process_filehandles <- function(syn,
                                       n_batch,
                                       download_location,
                                       output_location){
-  #' clear cache and directory
-  clear_cache_and_directory("user_dir", values$currentAnnotator)
-  
   #' retrieve images
   result <- values$allDf %>%
     dplyr::anti_join(
