@@ -331,6 +331,9 @@ app_server <- function( input, output, session ) {
     #' reset post confirmation
     values$postConfirm <- FALSE
     
+    #' remove previous files to save storage
+    clear_cache_and_directory("user_dir", values$currentAnnotator)
+    
     #' show modal spinner
     shinybusy::show_modal_spinner(
       spin = "fading-circle",
