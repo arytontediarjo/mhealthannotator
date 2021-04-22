@@ -1,6 +1,6 @@
-parse_picture_to_jpeg <- function(filepath, user_dir){
-    file.copy(filepath, user_dir)
-    filepath <- file.path(user_dir, basename(filepath))
+parse_picture_to_jpeg <- function(filepath, output_location){
+    file.copy(filepath, output_location)
+    filepath <- file.path(output_location, basename(filepath))
     if(tools::file_ext(filepath) == "png"){
         new_filepath <- sub('\\.png$', '.jpg', filepath)
         png_mat <- png::readPNG(filepath)
@@ -12,14 +12,6 @@ parse_picture_to_jpeg <- function(filepath, user_dir){
     }
 }
 
-visualize_photo <- function(filepath, curr_annotator){
-    #' create individual user directory
-    img_dir <- "user_images"
-    user_dir <- create_user_directory(img_dir, curr_annotator)
-    
-    #' parse your function here
-    filepath <- parse_picture_to_jpeg(filepath, user_dir)
-    
-    #' return image
-    return(filepath)
+visualize_photo <- function(filepath, output_location){
+    parse_picture_to_jpeg(filepath, output_location)
 }

@@ -50,23 +50,23 @@ parse_image_opts <- function(config){
 }
 
 
-create_user_directory <- function(img_dir, curr_annotator){
-    if(!dir.exists(img_dir)){
-        dir.create(img_dir) 
-    }
-    
+create_user_directory <- function(user_dir_parent, curr_annotator){
     #' create user directory
-    user_dir <- file.path(img_dir, curr_annotator)
-    if(!dir.exists(user_dir)){
-        dir.create(user_dir) 
-    }
+    dir.create(user_dir_parent) 
+    user_dir <- file.path(user_dir_parent, curr_annotator)
+    dir.create(file.path(user_dir), showWarnings = FALSE) 
+    dir.create(file.path(user_dir, "downloaded_files"), showWarnings = FALSE)
+    dir.create(file.path(user_dir, "processed_files"), showWarnings = FALSE)
     return(user_dir)
 }
 
 
-clear_cache_and_directory <- function(annotator){
+clear_cache_and_directory <- function(user_dir, annotator){
     ## clear all image & synapseCache
-    unlink(glue::glue("user_images/{annotator}/*"), 
-           recursive = T, force = T)
-    unlink("~/.synapseCache/*", recursive = T, force = T)
+    unlink(glue::glue(
+        "{user_dir}/{annotator}/downloaded_files/*"), 
+        recursive = T, force = T)
+    unlink(glue::glue(
+        "{user_dir}/{annotator}/processed_files/*"),
+        recursive = T, force = T)
 }

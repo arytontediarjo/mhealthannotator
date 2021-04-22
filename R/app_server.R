@@ -61,7 +61,10 @@ app_server <- function( input, output, session ) {
           annotator = values$currentAnnotator)
         
         #' clear directory
-        clear_cache_and_directory(annotator = values$currentAnnotator)
+        clear_cache_and_directory("user_dir", values$currentAnnotator)
+        
+        #' create output directory
+        create_user_directory("user_dir", values$currentAnnotator)
         
         #' get all data and previous data
         values$allDf <- get_all_image_source(
@@ -102,7 +105,11 @@ app_server <- function( input, output, session ) {
           uid = synapse_config$uid, 
           survey_colnames = survey_config$survey_colnames,
           keep_metadata = synapse_config$keep_metadata,
-          n_batch = synapse_config$n_batch
+          n_batch = synapse_config$n_batch,
+          download_location = glue::glue("user_dir/{annotator}/downloaded_files",
+                                         annotator = values$currentAnnotator),
+          output_location = glue::glue("user_dir/{annotator}/processed_files",
+                                       annotator = values$currentAnnotator)
         )
         
         #' get number images
@@ -387,7 +394,11 @@ app_server <- function( input, output, session ) {
         uid = synapse_config$uid, 
         survey_colnames = survey_config$survey_colnames,
         keep_metadata = synapse_config$keep_metadata,
-        n_batch = synapse_config$n_batch
+        n_batch = synapse_config$n_batch,
+        download_location = glue::glue("user_dir/{annotator}/downloaded_files",
+                                       annotator = values$currentAnnotator),
+        output_location = glue::glue("user_dir/{annotator}/processed_files",
+                                       annotator = values$currentAnnotator)
       )
       
       #' get number images
@@ -433,5 +444,9 @@ app_server <- function( input, output, session ) {
                     annotationTimestamp)
     DT::datatable(data, options = list(searching = FALSE,
                                     lengthChange= FALSE))
+  })
+  
+  onStop(function() {
+    clear_cache_and_directory("user_dir", isolate(values$currentAnnotator))
   })
 }

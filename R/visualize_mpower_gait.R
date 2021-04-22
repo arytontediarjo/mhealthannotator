@@ -38,10 +38,10 @@ get_color_mapping <- function(cols_key){
 
 #' @import ggplot2
 #' @import patchwork
-plot_gait_data <- function(filepath, user_dir){
+plot_gait_data <- function(filepath, output_location){
     output_filename <- tryCatch({
         output_filename <- file.path(
-            user_dir,
+            output_location,
             glue::glue(gsub(
                            "\\.json$", "", 
                            basename(filepath)), 
@@ -99,14 +99,7 @@ plot_gait_data <- function(filepath, user_dir){
     return(output_filename)
 }
 
-visualize_mpower_gait <- function(filepath, curr_annotator){
-    #' create individual user directory
-    img_dir <- "user_images"
-    user_dir <- create_user_directory(img_dir, curr_annotator)
-    
+visualize_mpower_gait <- function(filepath, output_location){
     #' parse your function here
-    filepath <- plot_gait_data(filepath, user_dir)
-    
-    #' return image
-    return(filepath)
+    plot_gait_data(filepath, output_location)
 }

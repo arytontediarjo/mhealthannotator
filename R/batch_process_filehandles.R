@@ -10,7 +10,8 @@ get_image_batch <- function(syn,
                             keep_metadata,
                             n_batch,
                             parallel = FALSE,
-                            curr_annotator){
+                            download_location,
+                            output_location){
   get_subset <- data %>%
     dplyr::slice(1:n_batch) %>%
     .[[uid]] %>% 
@@ -19,7 +20,9 @@ get_image_batch <- function(syn,
     glue::glue(
       "SELECT * FROM {synapse_tbl} WHERE recordId IN {get_subset}"))
   result <- syn$downloadTableColumns(
-    entity, filehandle_cols) %>%
+    table = entity, 
+    columns = filehandle_cols, 
+    downloadLocation = download_location) %>%
     tibble::enframe(.) %>%
     tidyr::unnest(value) %>%
     dplyr::select(
@@ -34,7 +37,7 @@ get_image_batch <- function(syn,
     dplyr::mutate(
       imagePath = purrr::map_chr(
         .x = filePath, 
-        curr_annotator = curr_annotator,
+        output_location = output_location,
         .f = golem::get_golem_options("visual_funs"))) %>%
     dplyr::mutate_all(as.character) %>%
     tidyr::drop_na(any_of(c("imagePath")))
@@ -52,7 +55,9 @@ batch_process_filehandles <- function(syn,
                                       uid, 
                                       survey_colnames,
                                       keep_metadata,
-                                      n_batch){
+                                      n_batch,
+                                      download_location,
+                                      output_location){
   #' retrieve images
   result <- values$allDf %>%
     dplyr::anti_join(
@@ -66,13 +71,13 @@ batch_process_filehandles <- function(syn,
                     keep_metadata = keep_metadata,
                     n_batch = n_batch,
                     parallel = FALSE,
-                    curr_annotator = values$currentAnnotator) %>% 
+                    download_location = download_location,
+                    output_location = output_location) %>% 
     dplyr::bind_cols(
       (survey_tbl <- purrr::map_dfc(
         survey_colnames, function(x){
         tibble(!!sym(x) := as.character(NA))
-      }))
-    ) %>%
+      }))) %>%
     dplyr::mutate(annotationTimestamp = NA_character_)
   return(result)
 }
