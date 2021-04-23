@@ -60,7 +60,14 @@ app_server <- function( input, output, session ) {
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
-        #' clear & create directory
+        #' clear & create directory and cache
+        syn$cache$cache_root_dir <- file.path("user_dir", 
+                                              values$currentAnnotator,
+                                              "downloaded_files")
+        clear_cache_and_directory("user_dir", values$currentAnnotator)
+        output_location <- file.path("user_dir", 
+                                     values$currentAnnotator, 
+                                     "processed_files")
         create_user_directory("user_dir", values$currentAnnotator)
         
         #' get all data and previous data
@@ -103,10 +110,7 @@ app_server <- function( input, output, session ) {
           survey_colnames = survey_config$survey_colnames,
           keep_metadata = synapse_config$keep_metadata,
           n_batch = synapse_config$n_batch,
-          download_location = glue::glue("user_dir/{annotator}/downloaded_files",
-                                         annotator = values$currentAnnotator),
-          output_location = glue::glue("user_dir/{annotator}/processed_files",
-                                       annotator = values$currentAnnotator)
+          output_location = output_location
         )
         
         #' get number images
@@ -392,12 +396,7 @@ app_server <- function( input, output, session ) {
         survey_colnames = survey_config$survey_colnames,
         keep_metadata = synapse_config$keep_metadata,
         n_batch = synapse_config$n_batch,
-        download_location = glue::glue(here::here(),
-                                       "/{project_location}/user_dir/{annotator}/downloaded_files",
-                                       annotator = values$currentAnnotator),
-        output_location = glue::glue(here::here(),
-                                     "/{project_location}/user_dir/{annotator}/processed_files",
-                                     annotator = values$currentAnnotator)
+        output_location = output_location
       )
       
       #' get number images
@@ -439,14 +438,13 @@ app_server <- function( input, output, session ) {
     data <- values$useDf[values$ii,] %>%
       dplyr::select(all_of(synapse_config$keep_metadata), 
                     all_of(survey_config$survey_colnames),
-                    filePath,
                     fileColumnName,
                     annotationTimestamp)
     DT::datatable(data, options = list(searching = FALSE,
                                     lengthChange= FALSE))
   })
   
-  observe({
-    print(values$useDf)
+  onStop(function() {
+    clear_cache_and_directory("user_dir", isolate(values$currentAnnotator))
   })
 }

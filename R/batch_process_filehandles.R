@@ -10,7 +10,6 @@ get_image_batch <- function(syn,
                             keep_metadata,
                             n_batch,
                             parallel = FALSE,
-                            download_location,
                             output_location){
   get_subset <- data %>%
     dplyr::slice(1:n_batch) %>%
@@ -21,8 +20,7 @@ get_image_batch <- function(syn,
       "SELECT * FROM {synapse_tbl} WHERE recordId IN {get_subset}"))
   result <- syn$downloadTableColumns(
     table = entity, 
-    columns = filehandle_cols, 
-    downloadLocation = download_location) %>%
+    columns = filehandle_cols) %>%
     tibble::enframe(.) %>%
     tidyr::unnest(value) %>%
     dplyr::select(
@@ -56,7 +54,6 @@ batch_process_filehandles <- function(syn,
                                       survey_colnames,
                                       keep_metadata,
                                       n_batch,
-                                      download_location,
                                       output_location){
   #' retrieve images
   result <- values$allDf %>%
@@ -71,7 +68,6 @@ batch_process_filehandles <- function(syn,
                     keep_metadata = keep_metadata,
                     n_batch = n_batch,
                     parallel = FALSE,
-                    download_location = download_location,
                     output_location = output_location) %>% 
     dplyr::bind_cols(
       (survey_tbl <- purrr::map_dfc(
