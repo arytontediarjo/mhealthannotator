@@ -60,10 +60,12 @@ app_server <- function( input, output, session ) {
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
-        create_user_directory("user_dir", values$currentAnnotator)
         syn$cache$cache_root_dir <- file.path(
           here::here(), "user_dir",
-          values$currentAnnotator, "downloaded_files")
+          values$currentAnnotator, 
+          ".synapseCache")
+        
+        create_user_directory("user_dir", values$currentAnnotator)
         
         #' get all data and previous data
         values$allDf <- get_all_image_source(
