@@ -362,6 +362,9 @@ app_server <- function( input, output, session ) {
         h4("We are fetching more data..."))
     )
     
+    # clear cache
+    clear_cache_and_directory("user_dir", values$currentAnnotator)
+    
     #' get all data and previous data
     values$allDf <- get_all_image_source(
       syn = syn, 
@@ -385,9 +388,6 @@ app_server <- function( input, output, session ) {
     if(values$total_images == values$curatedDf %>% nrow()){
       shinyjs::refresh()
     }else{
-      # clear cache
-      clear_cache_and_directory("user_dir", values$currentAnnotator)
-      
       #' batch process filehandles
       values$useDf <- batch_process_filehandles(
         syn = syn,
