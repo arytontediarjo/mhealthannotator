@@ -41,7 +41,9 @@ get_color_mapping <- function(cols_key){
 plot_gait_data <- function(filepath, output_location){
     output_filename <- tryCatch({
         output_filename <- file.path(
-            output_location,
+           "user_dir", 
+            "atediarjo",
+            "processed_files",
             glue::glue(gsub(
                            "\\.json$", "", 
                            basename(filepath)), 
