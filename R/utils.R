@@ -65,7 +65,4 @@ clear_directory <- function(user_dir, annotator){
     unlink(glue::glue(
         "{user_dir}/{annotator}/*"), 
         recursive = T, force = T)
-    unlink(glue::glue(
-        ".synapseCache/*"), 
-        recursive = T, force = T)
 }
