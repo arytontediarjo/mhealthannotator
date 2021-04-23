@@ -366,10 +366,8 @@ app_server <- function( input, output, session ) {
         h4("We are fetching more data..."))
     )
     
-    shinjs::refresh()
-    
-
-      
+    shinyjs::refresh()
+  
     #' update buttons
     values <- update_buttons(
       reactive_values = values,
