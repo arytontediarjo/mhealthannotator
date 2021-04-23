@@ -64,6 +64,7 @@ app_server <- function( input, output, session ) {
         syn$cache$cache_root_dir <- file.path("user_dir", 
                                               values$currentAnnotator,
                                               "downloaded_files")
+        clear_cache_and_directory("user_dir", values$currentAnnotator)
         output_location <- file.path("user_dir", 
                                      values$currentAnnotator, 
                                      "processed_files")
@@ -331,6 +332,9 @@ app_server <- function( input, output, session ) {
     #' reset post confirmation
     values$postConfirm <- FALSE
     
+    #' clear cache befo
+    clear_cache_and_directory("user_dir", values$currentAnnotator)
+    
     #' show modal spinner
     shinybusy::show_modal_spinner(
       spin = "fading-circle",
@@ -386,7 +390,6 @@ app_server <- function( input, output, session ) {
       shinyjs::refresh()
     }else{
       #' batch process filehandles
-      clear_cache_and_directory("user_dir", values$currentAnnotator)
       values$useDf <- batch_process_filehandles(
         syn = syn,
         values = values,
@@ -442,5 +445,9 @@ app_server <- function( input, output, session ) {
                     annotationTimestamp)
     DT::datatable(data, options = list(searching = FALSE,
                                     lengthChange= FALSE))
+  })
+  
+  onStop(function() {
+    clear_cache_and_directory("user_dir", isolate(values$currentAnnotator))
   })
 }
