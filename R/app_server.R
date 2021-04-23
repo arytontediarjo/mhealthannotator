@@ -363,7 +363,9 @@ app_server <- function( input, output, session ) {
     )
     
     # clear cache
-    clear_cache_and_directory("user_dir", values$currentAnnotator)
+    clear_cache_and_directory("user_dir", 
+                              values$currentAnnotator,
+                              "processed_files")
     
     #' get all data and previous data
     values$allDf <- get_all_image_source(
