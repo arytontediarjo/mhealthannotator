@@ -10,7 +10,9 @@ get_image_batch <- function(syn,
                             keep_metadata,
                             n_batch,
                             parallel = FALSE,
-                            output_location){
+                            output_location,
+                            cache_directory){
+  syn$cache$cache_root_dir <- cache_directory
   get_subset <- data %>%
     dplyr::slice(1:n_batch) %>%
     .[[uid]] %>% 
@@ -68,6 +70,9 @@ batch_process_filehandles <- function(syn,
                     n_batch = n_batch,
                     parallel = FALSE,
                     output_location = file.path("user_dir",
+                                                values$currentAnnotator,
+                                                "processed_files"),
+                    cache_directory = file.path("user_dir",
                                                 values$currentAnnotator,
                                                 "downloaded_files")) %>% 
     dplyr::bind_cols(

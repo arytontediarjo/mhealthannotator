@@ -62,7 +62,6 @@ app_server <- function( input, output, session ) {
         
         create_user_directory("user_dir", values$currentAnnotator)
         
-        
         #' get all data and previous data
         values$allDf <- get_all_image_source(
           syn = syn, 
