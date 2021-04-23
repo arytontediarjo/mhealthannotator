@@ -59,10 +59,6 @@ app_server <- function( input, output, session ) {
         values$fileName <- get_output_filename(
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
-        
-        syn$cache$cache_root_dir <- file.path("user_dir", 
-                                              values$currentAnnotator, 
-                                              "downloaded_files")
         output_location <- file.path("user_dir", 
                                      values$currentAnnotator, 
                                      "processed_files")
