@@ -60,7 +60,7 @@ app_server <- function( input, output, session ) {
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
-        clear_directory("user_dir", "atediarjo")
+        clear_directory("user_dir", values$currentAnnotator)
         create_user_directory("user_dir", values$currentAnnotator)
         
         #' get all data and previous data
@@ -325,7 +325,7 @@ app_server <- function( input, output, session ) {
     values$postConfirm <- FALSE
     
     #' clear directory
-    clear_directory("user_dir", "atediarjo")
+    clear_directory("user_dir", values$currentAnnotator)
     
     #' show modal spinner
     shinybusy::show_modal_spinner(
