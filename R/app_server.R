@@ -64,7 +64,6 @@ app_server <- function( input, output, session ) {
         syn$cache$cache_root_dir <- file.path("user_dir", 
                                               values$currentAnnotator,
                                               "downloaded_files")
-        clear_cache_and_directory("user_dir", values$currentAnnotator)
         output_location <- file.path("user_dir", 
                                      values$currentAnnotator, 
                                      "processed_files")
