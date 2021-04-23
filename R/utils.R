@@ -65,6 +65,10 @@ clear_cache_and_directory <- function(user_dir, annotator){
     ## clear all image & synapseCache
     unlink(glue::glue(
         here::here(),
-        "/{user_dir}/{annotator}/*"), 
+        "/{user_dir}/{annotator}/downloaded_files/*"), 
+        recursive = T, force = T)
+    unlink(glue::glue(
+        here::here(),
+        "/{user_dir}/{annotator}/processed_files/*"), 
         recursive = T, force = T)
 }
