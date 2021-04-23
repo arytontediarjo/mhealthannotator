@@ -323,6 +323,9 @@ app_server <- function( input, output, session ) {
     #' reset post confirmation
     values$postConfirm <- FALSE
     
+    #' clear directory
+    clear_directory("user_dir", "atediarjo")
+    
     #' show modal spinner
     shinybusy::show_modal_spinner(
       spin = "fading-circle",
