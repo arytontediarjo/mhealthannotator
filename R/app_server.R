@@ -52,20 +52,13 @@ app_server <- function( input, output, session ) {
     } else {
       ### login and update session; otherwise, notify to login to Synapse first
       tryCatch({
-        #' clear & create directory and cache
-        syn$cache$cache_root_dir <- file.path(
-          "user_dir", 
-          syn$getUserProfile(sessionToken = input$cookie), 
-          "downloaded_files")
-        syn$login(sessionToken = input$cookie, 
-                  rememberMe = FALSE)
+        syn$login(sessionToken = input$cookie, rememberMe = FALSE)
         
         #' update data after updating session
-        values$currentAnnotator <- syn$getUserProfile(sessionToken = input$cookie)
+        values$currentAnnotator <- get_current_annotator(syn)
         values$fileName <- get_output_filename(
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
-        
         clear_cache_and_directory("user_dir", values$currentAnnotator)
         output_location <- file.path("user_dir", 
                                      values$currentAnnotator, 
@@ -447,9 +440,5 @@ app_server <- function( input, output, session ) {
                     annotationTimestamp)
     DT::datatable(data, options = list(searching = FALSE,
                                     lengthChange= FALSE))
-  })
-  
-  observe({
-    print(syn$cache$cache_root_dir)
   })
 }
