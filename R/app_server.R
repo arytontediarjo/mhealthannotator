@@ -59,15 +59,14 @@ app_server <- function( input, output, session ) {
         values$fileName <- get_output_filename(
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
+        
+        syn$cache$cache_root_dir <- file.path("user_dir", 
+                                              values$currentAnnotator, 
+                                              "downloaded_files")
         output_location <- file.path("user_dir", 
                                      values$currentAnnotator, 
                                      "processed_files")
-        create_user_directory("user_dir", 
-                              values$currentAnnotator)
-        # clear cache
-        clear_cache_and_directory(user_dir = "user_dir", 
-                                  annotator = values$currentAnnotator,
-                                  location = "processed_files")
+        create_user_directory("user_dir", values$currentAnnotator)
         
         #' get all data and previous data
         values$allDf <- get_all_image_source(
@@ -397,7 +396,9 @@ app_server <- function( input, output, session ) {
         survey_colnames = survey_config$survey_colnames,
         keep_metadata = synapse_config$keep_metadata,
         n_batch = synapse_config$n_batch,
-        output_location = output_location
+        output_location = file.path("user_dir", 
+                                    values$currentAnnotator, 
+                                    "processed_files")
       )
       
       #' get number images
