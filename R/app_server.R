@@ -61,7 +61,8 @@ app_server <- function( input, output, session ) {
           annotator = values$currentAnnotator)
         
         syn$cache$cache_root_dir <- file.path(
-          here::here(), "user_dir",values$currentAnnotator, "downloaded_files")
+          here::here(), "user_dir",
+          values$currentAnnotator)
         
         create_user_directory("user_dir", values$currentAnnotator)
         
