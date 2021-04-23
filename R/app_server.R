@@ -59,7 +59,6 @@ app_server <- function( input, output, session ) {
         values$fileName <- get_output_filename(
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
-        clear_cache_and_directory("user_dir", values$currentAnnotator)
         output_location <- file.path("user_dir", 
                                      values$currentAnnotator, 
                                      "processed_files")
@@ -326,9 +325,6 @@ app_server <- function( input, output, session ) {
     
     #' reset post confirmation
     values$postConfirm <- FALSE
-    
-    #' clear cache befo
-    clear_cache_and_directory("user_dir", values$currentAnnotator)
     
     #' show modal spinner
     shinybusy::show_modal_spinner(
