@@ -387,6 +387,7 @@ app_server <- function( input, output, session ) {
       shinyjs::refresh()
     }else{
       #' batch process filehandles
+      clear_cache_and_directory("user_dir", values$currentAnnotator)
       values$useDf <- batch_process_filehandles(
         syn = syn,
         values = values,
