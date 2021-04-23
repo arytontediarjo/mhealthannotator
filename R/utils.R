@@ -63,6 +63,9 @@ create_user_directory <- function(user_dir_parent, curr_annotator){
 
 clear_directory <- function(user_dir, annotator){
     unlink(glue::glue(
-        "{user_dir}/{annotator}/*"), 
+        "{user_dir}/{annotator}/downloaded_files/*"), 
+        recursive = T, force = T)
+    unlink(glue::glue(
+        "{user_dir}/{annotator}/processed_files/*"), 
         recursive = T, force = T)
 }
