@@ -60,6 +60,7 @@ app_server <- function( input, output, session ) {
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
+        clear_directory("user_dir", "atediarjo")
         create_user_directory("user_dir", values$currentAnnotator)
         
         #' get all data and previous data
