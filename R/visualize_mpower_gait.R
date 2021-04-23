@@ -38,10 +38,10 @@ get_color_mapping <- function(cols_key){
 
 #' @import ggplot2
 #' @import patchwork
-plot_gait_data <- function(filepath, output_location){
+plot_gait_data <- function(filepath){
     output_filename <- tryCatch({
         output_filename <- file.path(
-           "user_dir", 
+            "user_dir", 
             "atediarjo",
             "processed_files",
             glue::glue(gsub(
@@ -101,7 +101,7 @@ plot_gait_data <- function(filepath, output_location){
     return(output_filename)
 }
 
-visualize_mpower_gait <- function(filepath, output_location){
+visualize_mpower_gait <- function(filepath){
     #' parse your function here
-    plot_gait_data(filepath, output_location)
+    plot_gait_data(filepath)
 }

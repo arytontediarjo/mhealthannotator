@@ -64,10 +64,6 @@ app_server <- function( input, output, session ) {
         #                                       values$currentAnnotator, 
         #                                       "downloaded_files")
         
-        
-        output_location <- file.path("user_dir", 
-                                     values$currentAnnotator, 
-                                     "processed_files")
         create_user_directory("user_dir", values$currentAnnotator)
         
         #' get all data and previous data
@@ -109,10 +105,7 @@ app_server <- function( input, output, session ) {
           uid = synapse_config$uid, 
           survey_colnames = survey_config$survey_colnames,
           keep_metadata = synapse_config$keep_metadata,
-          n_batch = synapse_config$n_batch,
-          output_location = file.path("user_dir", 
-                                     values$currentAnnotator, 
-                                     "processed_files")
+          n_batch = synapse_config$n_batch
         )
         
         #' get number images
@@ -397,10 +390,7 @@ app_server <- function( input, output, session ) {
         uid = synapse_config$uid, 
         survey_colnames = survey_config$survey_colnames,
         keep_metadata = synapse_config$keep_metadata,
-        n_batch = synapse_config$n_batch,
-        output_location = file.path("user_dir", 
-                                    values$currentAnnotator, 
-                                    "processed_files")
+        n_batch = synapse_config$n_batch
       )
       
       #' get number images
