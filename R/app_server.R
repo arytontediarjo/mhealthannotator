@@ -66,8 +66,12 @@ app_server <- function( input, output, session ) {
         output_location <- file.path("user_dir", 
                                      values$currentAnnotator, 
                                      "processed_files")
-        clear_cache_and_directory("user_dir", "atediarjo")
-        create_user_directory("user_dir", values$currentAnnotator)
+        create_user_directory("user_dir", 
+                              values$currentAnnotator)
+        # clear cache
+        clear_cache_and_directory(user_dir = "user_dir", 
+                                  annotator = values$currentAnnotator,
+                                  location = "processed_files")
         
         #' get all data and previous data
         values$allDf <- get_all_image_source(
@@ -363,9 +367,10 @@ app_server <- function( input, output, session ) {
     )
     
     # clear cache
-    clear_cache_and_directory("user_dir", 
-                              values$currentAnnotator,
-                              "processed_files")
+    # clear cache
+    clear_cache_and_directory(user_dir = "user_dir", 
+                              annotator = values$currentAnnotator,
+                              location = "processed_files")
     
     #' get all data and previous data
     values$allDf <- get_all_image_source(
