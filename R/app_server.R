@@ -335,6 +335,11 @@ app_server <- function( input, output, session ) {
     #' reset post confirmation
     values$postConfirm <- FALSE
     
+    #' redefine
+    syn$cache$cache_root_dir <- file.path("user_dir", 
+                                          values$currentAnnotator, 
+                                          "downloaded_files")
+    
     #' show modal spinner
     shinybusy::show_modal_spinner(
       spin = "fading-circle",
