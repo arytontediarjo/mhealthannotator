@@ -31,35 +31,38 @@ app_ui <- function(request) {
       tabItem(
         tabName = "annotator",
         fluidRow(
-          column(width = 3, infoBoxOutput("userBox", width = "300px")),
+          column(width = 3, infoBoxOutput("userBox", width = "200px")),
           column(width = 3, infoBoxOutput("progressBox", width = "300px")),
-          column(width = 5, infoBoxOutput("totalCurated", width = "300px"))
+          column(width = 4, infoBoxOutput("totalCurated", width = "300px"))
         ),
-        br(),
         fluidRow(
+          br(),
           column(width = 7, 
                  align = "center",
                  mod_render_image_ui("render_image_ui_1")),
-          column(width = 4, offset = 1, 
-                 box(mod_survey_input_user_ui("ui_1"),
-                     br(),
-                     br(),
-                     div(
-                       style = "display:inline-block; float:left",
-                       actionButton("goPrev", "", icon = icon("arrow-left"), 
-                                    width = "100px")),
-                     div(
-                       style = "display:inline-block; float:left",
-                       actionButton("goNext", "", icon = icon("arrow-right"), 
-                                    width = "100px")),
-                     div(style = "display:inline-block; float:right", 
-                         actionButton("save", "Save My Results",
-                                      icon = icon("cloud-upload"))),
-                     width = 100, 
-                     height = 400)
-                 )
+          column(width = 4,
+                 offset = 1,
+                 mod_survey_input_user_ui("ui_1"),
+                 br(),
+                 div(
+                   style = "display:inline-block; float:left",
+                   actionButton("goPrev", "", icon = icon("arrow-left"), 
+                                width = "100px")),
+                 div(
+                   style = "display:inline-block; float:left",
+                   actionButton("goNext", "", icon = icon("arrow-right"), 
+                                width = "100px")),
+                 br(),
+                 br(),
+                 br(),
+                 div(style = "display:inline-block; float:left", 
+                     actionButton("save", "Save My Results",
+                                  style = "color: white; background-color: SteelBlue",
+                                  icon = icon("cloud-upload"),
+                                  width = "200px")))
         ),
         fluidRow(
+          br(),
           br(),
           br(),
           conditionalPanel(
