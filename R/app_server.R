@@ -438,7 +438,7 @@ app_server <- function( input, output, session ) {
                                     lengthChange= FALSE))
   })
   
-  onStop(function() {
-    clear_directory("user_dir", "atediarjo")
-  })
+  # onStop(function() {
+  #   clear_directory("user_dir", "atediarjo")
+  # })
 }
