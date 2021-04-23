@@ -9,7 +9,8 @@ get_image_batch <- function(syn,
                             uid, 
                             keep_metadata,
                             n_batch,
-                            parallel = FALSE){
+                            parallel = FALSE,
+                            output_location){
   get_subset <- data %>%
     dplyr::slice(1:n_batch) %>%
     .[[uid]] %>% 
@@ -34,6 +35,7 @@ get_image_batch <- function(syn,
     dplyr::mutate(
       imagePath = purrr::map_chr(
         .x = filePath, 
+        output_location = output_location,
         .f = golem::get_golem_options("visual_funs"))) %>%
     dplyr::mutate_all(as.character) %>%
     tidyr::drop_na(any_of(c("imagePath")))
@@ -64,7 +66,10 @@ batch_process_filehandles <- function(syn,
                     filehandle_cols = filehandle_cols,
                     keep_metadata = keep_metadata,
                     n_batch = n_batch,
-                    parallel = FALSE) %>% 
+                    parallel = FALSE,
+                    output_location = file.path("user_dir",
+                                                values$currentAnnotator,
+                                                "downloaded_files")) %>% 
     dplyr::bind_cols(
       (survey_tbl <- purrr::map_dfc(
         survey_colnames, function(x){

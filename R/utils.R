@@ -61,8 +61,11 @@ create_user_directory <- function(user_dir_parent, curr_annotator){
 }
 
 
-clear_directory <- function(user_dir, annotator, location){
+clear_directory <- function(user_dir, annotator){
     unlink(glue::glue(
-        "{user_dir}/{annotator}/{location}/*"), 
+        "{user_dir}/{annotator}/*"), 
+        recursive = T, force = T)
+    unlink(glue::glue(
+        ".synapseCache/*"), 
         recursive = T, force = T)
 }

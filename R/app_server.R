@@ -60,12 +60,8 @@ app_server <- function( input, output, session ) {
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
-        syn$cache$cache_root_dir <- file.path(
-          here::here(), "user_dir",
-          values$currentAnnotator, 
-          ".synapseCache")
-        
         create_user_directory("user_dir", values$currentAnnotator)
+        
         
         #' get all data and previous data
         values$allDf <- get_all_image_source(
@@ -440,6 +436,6 @@ app_server <- function( input, output, session ) {
   })
   
   onStop(function() {
-    cat("Doing application cleanup\n")
+    clear_directory("user_dir", "atediarjo")
   })
 }
