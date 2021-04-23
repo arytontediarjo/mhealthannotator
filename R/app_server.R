@@ -113,7 +113,9 @@ app_server <- function( input, output, session ) {
           survey_colnames = survey_config$survey_colnames,
           keep_metadata = synapse_config$keep_metadata,
           n_batch = synapse_config$n_batch,
-          output_location = output_location
+          output_location = file.path("user_dir", 
+                                     values$currentAnnotator, 
+                                     "processed_files")
         )
         
         #' get number images
@@ -366,34 +368,72 @@ app_server <- function( input, output, session ) {
         h4("We are fetching more data..."))
     )
     
-    shinyjs::refresh()
-  
-    #' update buttons
-    values <- update_buttons(
-      reactive_values = values,
-      session = session, 
-      curr_index = values$ii,
-      survey_colnames = survey_config$survey_colnames,
-      survey_types = survey_config$button_types)
+    #' get all data and previous data
+    values$allDf <- get_all_image_source(
+      syn = syn, 
+      filehandle_cols = synapse_config$filehandle_cols,
+      synapse_tbl = synapse_config$synapse_tbl)
     
-    #' re-render image
-    callModule(mod_render_image_server, 
-               "render_image_ui_1",
-               obj_path = values$useDf$imagePath[values$ii],
-               input_width = image_config$width,
-               input_height = image_config$height)
+    #' get total images needed to be curatetd
+    values$total_images <- values$allDf %>% nrow()
     
-    #' remove when done
-    Sys.sleep(2)
-    shinybusy::remove_modal_spinner()
-    
-    #' send sweet alert
-    sendSweetAlert(
-      session = session,
-      title = "Session is updated!",
-      text = "We saved your previous session annotations to Synapse.",
-      type = "success"
+    #' get previous image that has been curated
+    values$curatedDf <- get_prev_curated_images(
+      syn = syn,
+      parent_id = synapse_config$output_parent_id,
+      stored_filename = values$fileName,
+      uid = synapse_config$uid,
+      keep_metadata = synapse_config$keep_metadata,
+      survey_colnames = synapse_config$survey_colnames
     )
+    
+    #' refresh if ran out of images
+    if(values$total_images == values$curatedDf %>% nrow()){
+      shinyjs::refresh()
+    }else{
+      #' batch process filehandles
+      values$useDf <- batch_process_filehandles(
+        syn = syn,
+        values = values,
+        synapse_tbl = synapse_config$synapse_tbl,
+        filehandle_cols = synapse_config$filehandle_cols,
+        uid = synapse_config$uid, 
+        survey_colnames = survey_config$survey_colnames,
+        keep_metadata = synapse_config$keep_metadata,
+        n_batch = synapse_config$n_batch,
+        output_location = output_location
+      )
+      
+      #' get number images
+      values$numImages <- values$useDf %>% nrow(.)
+      
+      #' update buttons
+      values <- update_buttons(
+        reactive_values = values,
+        session = session, 
+        curr_index = values$ii,
+        survey_colnames = survey_config$survey_colnames,
+        survey_types = survey_config$button_types)
+      
+      #' re-render image
+      callModule(mod_render_image_server, 
+                 "render_image_ui_1",
+                 obj_path = values$useDf$imagePath[values$ii],
+                 input_width = image_config$width,
+                 input_height = image_config$height)
+      
+      #' remove when done
+      Sys.sleep(2)
+      shinybusy::remove_modal_spinner()
+      
+      #' send sweet alert
+      sendSweetAlert(
+        session = session,
+        title = "Session is updated!",
+        text = "We saved your previous session annotations to Synapse.",
+        type = "success"
+      )
+    }
   })
   
   ##################################
@@ -410,6 +450,6 @@ app_server <- function( input, output, session ) {
   })
   
   onStop(function() {
-    
+    cat("Doing application cleanup\n")
   })
 }
