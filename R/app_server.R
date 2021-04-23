@@ -366,12 +366,6 @@ app_server <- function( input, output, session ) {
         h4("We are fetching more data..."))
     )
     
-    # clear cache
-    # clear cache
-    clear_cache_and_directory(user_dir = "user_dir", 
-                              annotator = values$currentAnnotator,
-                              location = "processed_files")
-    
     #' get all data and previous data
     values$allDf <- get_all_image_source(
       syn = syn, 
