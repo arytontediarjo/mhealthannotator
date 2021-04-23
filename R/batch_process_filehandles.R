@@ -12,7 +12,7 @@ get_image_batch <- function(syn,
                             parallel = FALSE,
                             output_location,
                             cache_directory){
-  syn$cache$cache_root_dir <- "user_dir/atediarjo"
+  syn$cache$cache_root_dir <- "user_dir/atediarjo/downloaded_files"
   get_subset <- data %>%
     dplyr::slice(1:n_batch) %>%
     .[[uid]] %>% 
