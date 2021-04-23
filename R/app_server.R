@@ -60,9 +60,8 @@ app_server <- function( input, output, session ) {
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
-        syn$cache$cache_root_dir <- file.path("user_dir",
-                                              values$currentAnnotator,
-                                              "downloaded_files")
+        syn$cache$cache_root_dir <- file.path(
+          here::here(), "user_dir",values$currentAnnotator, "downloaded_files")
         
         create_user_directory("user_dir", values$currentAnnotator)
         
