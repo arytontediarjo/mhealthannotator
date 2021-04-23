@@ -55,11 +55,6 @@ batch_process_filehandles <- function(syn,
                                       keep_metadata,
                                       n_batch,
                                       output_location){
-  #' clear & create directory and cache
-  syn$cache$cache_root_dir <- file.path("user_dir", 
-                                        values$currentAnnotator,
-                                        "downloaded_files")
-  
   #' retrieve images
   result <- values$allDf %>%
     dplyr::anti_join(
