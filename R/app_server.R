@@ -66,6 +66,7 @@ app_server <- function( input, output, session ) {
         output_location <- file.path("user_dir", 
                                      values$currentAnnotator, 
                                      "processed_files")
+        clear_cache_and_directory("user_dir", "atediarjo")
         create_user_directory("user_dir", values$currentAnnotator)
         
         #' get all data and previous data
@@ -384,6 +385,9 @@ app_server <- function( input, output, session ) {
     if(values$total_images == values$curatedDf %>% nrow()){
       shinyjs::refresh()
     }else{
+      # clear cache
+      clear_cache_and_directory("user_dir", "atediarjo")
+      
       #' batch process filehandles
       values$useDf <- batch_process_filehandles(
         syn = syn,
