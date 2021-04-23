@@ -446,8 +446,4 @@ app_server <- function( input, output, session ) {
     DT::datatable(data, options = list(searching = FALSE,
                                     lengthChange= FALSE))
   })
-  
-  onStop(function() {
-    clear_cache_and_directory("user_dir", isolate(values$currentAnnotator))
-  })
 }
