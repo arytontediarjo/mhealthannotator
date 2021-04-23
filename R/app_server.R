@@ -385,9 +385,6 @@ app_server <- function( input, output, session ) {
     if(values$total_images == values$curatedDf %>% nrow()){
       shinyjs::refresh()
     }else{
-      # clear cache
-      clear_cache_and_directory("user_dir", "atediarjo")
-      
       #' batch process filehandles
       values$useDf <- batch_process_filehandles(
         syn = syn,
