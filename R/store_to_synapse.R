@@ -7,6 +7,7 @@ store_to_synapse <- function(syn,
                              output_filename){
     new_data %>% 
         dplyr::select(-any_of(c("filePath", "imagePath"))) %>%
+        dplyr::mutate(annotator = current_annotator) %>%
         dplyr::mutate_all(.funs = as.character) %>%
         dplyr::full_join((stored_data %>%
                              dplyr::mutate_all(.funs = as.character))) %>%
