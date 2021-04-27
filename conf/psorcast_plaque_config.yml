@@ -1,9 +1,9 @@
 default:
     synapse_opts:
         synID:
-            parent_output: "syn25258905"
+            parent_output: "syn25614060"
             tbl: "syn22281748" 
-        output_filename: "annotator_psorcast_test.tsv"
+        output_filename: "psoriasis_plaque_annotations.tsv"
         column_targets:
             choice_1: "psoriasisAreaPhoto.jpg"
             choice_2: "psoriasisAreaPhoto.png"
@@ -43,3 +43,26 @@ default:
                 choice_3: 2
                 choice_4: 3
                 choice_5: 4
+        survey_4:
+            colname: "scaling_2"
+            type: "radio"
+            prompt: "scaling"
+            input_choices:
+                choice_1: 0
+                choice_2: 1
+                choice_3: 2
+                choice_4: 3
+                choice_5: 4
+        survey_5:
+            colname: "scaling_3"
+            type: "radio"
+            prompt: "scaling"
+            input_choices:
+                choice_1: 0
+                choice_2: 1
+                choice_3: 2
+                choice_4: 3
+                choice_5: 4
+    image_opts: 
+        width: "750px"
+        height: "450px"

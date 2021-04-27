@@ -1,9 +1,9 @@
 default:
     synapse_opts:
         synID:
-            parent_output: "syn25614059"
-            tbl: "syn22281749" 
-        output_filename: "psorcast_hand_imaging_annotations.tsv"
+            parent_output: "syn25614058"
+            tbl: "syn22281750" 
+        output_filename: "psorcast_foot_imaging_annotations.tsv"
         column_targets:
             - "summaryImage.jpg"
         unique_identifier: 
