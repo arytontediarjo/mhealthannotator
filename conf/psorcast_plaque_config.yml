@@ -46,4 +46,4 @@ default:
                 4: 4
     image_opts: 
         width: "650px"
-        height: "400px"
+        height: "450px"
