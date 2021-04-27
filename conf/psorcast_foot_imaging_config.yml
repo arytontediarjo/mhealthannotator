@@ -45,5 +45,5 @@ default:
                     - "Yes"
                     - "No"
     image_opts: 
-        width: "750px"
+        width: "700px"
         height: "450px"
