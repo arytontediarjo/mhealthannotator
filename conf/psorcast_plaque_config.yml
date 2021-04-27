@@ -5,64 +5,45 @@ default:
             tbl: "syn22281748" 
         output_filename: "psoriasis_plaque_annotations.tsv"
         column_targets:
-            choice_1: "psoriasisAreaPhoto.jpg"
-            choice_2: "psoriasisAreaPhoto.png"
-        unique_identifier: "recordId" # unique identifier for that file in synapse table
+            - "psoriasisAreaPhoto.jpg"
+            - "psoriasisAreaPhoto.png"
+        unique_identifier: 
+            - "recordId" # unique identifier for that file in synapse table
         n_batch: 5
         keep_metadata:
-            choice_1: "participantID"
-            choice_2: "createdOn"
+            - "participantID"
+            - "createdOn"
     survey_opts:
         survey_1:
             colname: "erythema"
             type: "radio"
-            prompt: "erythema"
+            prompt: "Erythema:"
             input_choices:
-                choice_1: 0
-                choice_2: 1
-                choice_3: 2
-                choice_4: 3
-                choice_5: 4
+                0: 0
+                1: 1
+                2: 2
+                3: 3
+                4: 4
         survey_2:
             colname: "induration"
             type: "radio"
-            prompt: "induration"
+            prompt: "Induration:"
             input_choices:
-                choice_1: 0
-                choice_2: 1
-                choice_3: 2
-                choice_4: 3
-                choice_5: 4
+                0: 0
+                1: 1
+                2: 2
+                3: 3
+                4: 4
         survey_3:
             colname: "scaling"
             type: "radio"
-            prompt: "scaling"
+            prompt: "Scaling:"
             input_choices:
-                choice_1: 0
-                choice_2: 1
-                choice_3: 2
-                choice_4: 3
-                choice_5: 4
-        survey_4:
-            colname: "scaling_2"
-            type: "radio"
-            prompt: "scaling"
-            input_choices:
-                choice_1: 0
-                choice_2: 1
-                choice_3: 2
-                choice_4: 3
-                choice_5: 4
-        survey_5:
-            colname: "scaling_3"
-            type: "radio"
-            prompt: "scaling"
-            input_choices:
-                choice_1: 0
-                choice_2: 1
-                choice_3: 2
-                choice_4: 3
-                choice_5: 4
+                0: 0
+                1: 1
+                2: 2
+                3: 3
+                4: 4
     image_opts: 
         width: "750px"
         height: "450px"
