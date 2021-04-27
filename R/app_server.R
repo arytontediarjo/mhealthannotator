@@ -432,6 +432,9 @@ app_server <- function( input, output, session ) {
         curr_index = values$ii,
         survey_config = config$survey_opts)
       
+      #' reset button 
+      values$ii <- 1
+      
       #' re-render image
       callModule(mod_render_image_server, 
                  "render_image_ui_1",
