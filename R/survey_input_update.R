@@ -1,6 +1,10 @@
-parse_select_value <- function(row_input){
+parse_select_value <- function(row_input, selected){
     if(is.na(row_input)){
-        return(character(0))
+        if(is.null(selected)){
+            return(character(0))
+        }else{
+            return(selected)
+        }
     }else{
         return(
             stringr::str_split(row_input, ",") %>% 
@@ -9,9 +13,9 @@ parse_select_value <- function(row_input){
     }
 }
 
-parse_slider_value <- function(row_input){
+parse_slider_value <- function(row_input, selected){
     if(is.na(row_input)){
-        return("None Selected")
+        return(selected)
     }else{
         return(as.numeric(row_input))
     }
@@ -20,29 +24,33 @@ parse_slider_value <- function(row_input){
 update_buttons <- function(reactive_values,
                            session, 
                            curr_index,
-                           survey_colnames,
-                           survey_types){
+                           survey_config){
     select_view_ns <- NS("ui_1")
-    purrr::walk2(survey_colnames, survey_types, 
-                function(survey_colname, survey_type){
-        row_input <- reactive_values$useDf[[survey_colname]][curr_index]
-        if(is.na(row_input)){
-            reactive_values$userInput[[survey_colname]] <- "None Selected"
-        }else{
-            reactive_values$userInput[[survey_colname]] <- row_input
-        }
-        if(survey_type == "radio"){
+    purrr::walk(survey_config, function(survey){
+        selected <- survey$selected
+        colname <- survey$colname
+        type <- survey$type
+        row_input <- reactive_values$useDf[[colname]][curr_index]
+        if(type == "radio"){
             updateRadioGroupButtons(session, 
-                                    select_view_ns(survey_colname), 
-                                    selected = parse_select_value(row_input))
-        }else if(survey_type == "select"){
+                                    select_view_ns(colname), 
+                                    selected = parse_select_value(
+                                        row_input, selected = selected))
+        }else if(type == "select"){
             updatePickerInput(session, 
-                              select_view_ns(survey_colname), 
-                              selected = parse_select_value(row_input))
-        }else{
+                              select_view_ns(colname), 
+                              selected = parse_select_value(
+                                  row_input, selected = selected))
+        }else if(type == "slider"){
             updateSliderTextInput(session, 
-                              select_view_ns(survey_colname), 
-                              selected = as.numeric(parse_slider_value(row_input)))
+                                  select_view_ns(colname), 
+                                  selected = as.numeric(parse_slider_value(
+                                  row_input, selected = selected)))
+        }else{
+            updateCheckboxGroupButtons(session, 
+                                       select_view_ns(colname), 
+                                       selected = parse_select_value(
+                                           row_input, selected = selected))
         }
     })
     return(reactive_values)

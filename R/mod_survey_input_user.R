@@ -24,6 +24,7 @@ mod_survey_input_user_ui <- function(id){
         choices <- x$input_choices
         prompt <- x$prompt
         colname <- x$colname
+        selected <- x$selected
         buttonType <- x$type
         
         if(buttonType == "radio"){
@@ -56,6 +57,14 @@ mod_survey_input_user_ui <- function(id){
             grid = TRUE,
             force_edges = TRUE
           )
+        }else if(buttonType == "checkbox_group"){
+          checkboxGroupButtons(
+            inputId = ns(colname),
+            label = h4(prompt), 
+            selected = selected,
+            choices = choices,
+            checkIcon = list(
+              yes = icon("ok", lib = "glyphicon")))
         }else{
           stop("Please parse in button UI")
         }
@@ -82,7 +91,7 @@ mod_survey_input_user_server <- function(input, output, session, values){
   purrr::walk(status_vec, function(status){
     observeEvent(input[[status]], {
       if(is.null(input[[status]])){
-        values$userInput[[status]] <- "None Selected"
+        values$userInput[[status]] <- ""
       }else{
         values$userInput[[status]] <- glue::glue_collapse(
           input[[status]], sep = ", ")

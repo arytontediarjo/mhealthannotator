@@ -225,85 +225,114 @@ app_server <- function( input, output, session ) {
   #' rended go forward button
   #################
   observeEvent(input$goNext, {
-    #' store survey input 
-    values$useDf <- values$useDf %>%
-      survey_input_store(
-        curr_index = values$ii, 
-        user_inputs = values$userInput,
-        survey_colnames = survey_config$survey_colnames,
-        keep_metadata = synapse_config$keep_metadata,
-        uid = synapse_config$uid
-    )
-    
-    #' call module to render image
-    callModule(mod_render_image_server, 
-               "render_image_ui_1",
-               obj_path = values$useDf$imagePath[values$ii],
-               input_width = image_config$width,
-               input_height = image_config$height)
-    
-    total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
-    if((total_curated == values$numImages) & !values$postConfirm){
-      ask_confirmation(
-        inputId = "confirmation",
-        title = "Thank You!! \n You have finished this session!",
-        btn_labels = c("Review before saving", "Save to Synapse"),
-        btn_colors = c("#FE642E", "#04B404"),
-        type = "success")
-      values$postConfirm <- TRUE
+    if("" %in% values$userInput){
+      sendSweetAlert(
+        session,
+        title = "Oops!",
+        text = "Please finish all the survey questions before moving to the next one",
+        type = "error",
+        btn_labels = "Ok",
+        btn_colors = "#3085d6",
+        html = FALSE,
+        closeOnClickOutside = TRUE,
+        showCloseButton = FALSE,
+        width = NULL
+      )
+    }else{
+      #' store survey input 
+      values$useDf <- values$useDf %>%
+        survey_input_store(
+          curr_index = values$ii, 
+          user_inputs = values$userInput,
+          survey_colnames = survey_config$survey_colnames,
+          keep_metadata = synapse_config$keep_metadata,
+          uid = synapse_config$uid
+        )
+      
+      #' call module to render image
+      callModule(mod_render_image_server, 
+                 "render_image_ui_1",
+                 obj_path = values$useDf$imagePath[values$ii],
+                 input_width = image_config$width,
+                 input_height = image_config$height)
+      
+      total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
+      if((total_curated == values$numImages) & !values$postConfirm){
+        ask_confirmation(
+          inputId = "confirmation",
+          title = "Thank You!! \n You have finished this session!",
+          btn_labels = c("Review before saving", "Save to Synapse"),
+          btn_colors = c("#FE642E", "#04B404"),
+          type = "success")
+        values$postConfirm <- TRUE
+      }
+      
+      if(values$ii == values$useDf %>% nrow(.)){
+        tmpI <- 1
+      } else{
+        tmpI <- values$ii + 1
+      }
+      values$ii <- tmpI
+      values <- update_buttons(
+        reactive_values = values,
+        session = session, 
+        curr_index = values$ii,
+        survey_config = config$survey_opts)
+      
     }
-
-    if(values$ii == values$useDf %>% nrow(.)){
-      tmpI <- 1
-    } else{
-      tmpI <- values$ii + 1
-    }
-    values$ii <- tmpI
-    values <- update_buttons(
-      reactive_values = values,
-      session = session, 
-      curr_index = values$ii,
-      survey_colnames = survey_config$survey_colnames,
-      survey_types = survey_config$button_types)
   })
 
   #################
   #' render go back button
   ##################
   observeEvent(input$goPrev, {
-    values$useDf <- values$useDf %>%
-      survey_input_store(curr_index = values$ii, 
-                         user_inputs = values$userInput,
-                         survey_colnames = survey_config$survey_colnames,
-                         keep_metadata = synapse_config$keep_metadata,
-                         uid = synapse_config$uid)
-    callModule(mod_render_image_server, 
-               "render_image_ui_1",
-               obj_path = values$useDf$imagePath[values$ii],
-               input_width = image_config$width,
-               input_height = image_config$height)
-    total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
-    if((total_curated == values$numImages) & !values$postConfirm){
-      ask_confirmation(
-        inputId = "confirmation",
-        title = "Thank You!! \n You have finished your annotation!",
-        btn_labels = c("Review before saving", "Save to Synapse"),
-        btn_colors = c("#FE642E", "#04B404"),
-        type = "success")
-      values$postConfirm <- TRUE
-    }
-    if(values$ii > 1){
-      tmpI <- values$ii - 1
+    if("" %in% values$userInput){
+      sendSweetAlert(
+        session,
+        title = "Oops!",
+        text = "Please finish all the survey questions before moving to the next one",
+        type = "error",
+        btn_labels = "Ok",
+        btn_colors = "#3085d6",
+        html = FALSE,
+        closeOnClickOutside = TRUE,
+        showCloseButton = FALSE,
+        width = NULL
+      )
     }else{
-      tmpI <- values$useDf %>% nrow(.)
+      values$useDf <- values$useDf %>%
+        survey_input_store(curr_index = values$ii, 
+                           user_inputs = values$userInput,
+                           survey_colnames = survey_config$survey_colnames,
+                           keep_metadata = synapse_config$keep_metadata,
+                           uid = synapse_config$uid)
+      callModule(mod_render_image_server, 
+                 "render_image_ui_1",
+                 obj_path = values$useDf$imagePath[values$ii],
+                 input_width = image_config$width,
+                 input_height = image_config$height)
+      total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
+      if((total_curated == values$numImages) & !values$postConfirm){
+        ask_confirmation(
+          inputId = "confirmation",
+          title = "Thank You!! \n You have finished your annotation!",
+          btn_labels = c("Review before saving", "Save to Synapse"),
+          btn_colors = c("#FE642E", "#04B404"),
+          type = "success")
+        values$postConfirm <- TRUE
+      }
+      if(values$ii > 1){
+        tmpI <- values$ii - 1
+      }else{
+        tmpI <- values$useDf %>% nrow(.)
+      }
+      values$ii <- tmpI
+      values <- update_buttons(
+        reactive_values = values,
+        session = session, 
+        curr_index = values$ii,
+        survey_config = config$survey_opts)
     }
-    values$ii <- tmpI
-    values <- update_buttons(
-      reactive_values = values,
-      session = session, 
-      curr_index = values$ii,
-      survey_colnames = survey_config$survey_colnames,
-      survey_types = survey_config$button_types)
   })
   
   ##################################
@@ -401,8 +430,7 @@ app_server <- function( input, output, session ) {
         reactive_values = values,
         session = session, 
         curr_index = values$ii,
-        survey_colnames = survey_config$survey_colnames,
-        survey_types = survey_config$button_types)
+        survey_config = config$survey_opts)
       
       #' re-render image
       callModule(mod_render_image_server, 
@@ -438,7 +466,7 @@ app_server <- function( input, output, session ) {
                                     lengthChange= FALSE))
   })
   
-  # onStop(function() {
-  #   clear_directory("user_dir", "atediarjo")
-  # })
+  observe({
+    print(values$userInput)
+  })
 }
