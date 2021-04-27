@@ -23,6 +23,7 @@ default:
                 1: 1
                 2: 2
                 3: 3
+                4: 4
                 Can't Tell: "Can't Tell"
         survey_2:
             colname: "induration"
@@ -33,6 +34,7 @@ default:
                 1: 1
                 2: 2
                 3: 3
+                4: 4
                 Can't Tell: "Can't Tell"
         survey_3:
             colname: "scaling"
