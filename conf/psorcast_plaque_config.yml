@@ -23,7 +23,7 @@ default:
                 1: 1
                 2: 2
                 3: 3
-                4: 4
+                Can't Tell: "Can't Tell"
         survey_2:
             colname: "induration"
             type: "radio"
@@ -33,7 +33,7 @@ default:
                 1: 1
                 2: 2
                 3: 3
-                4: 4
+                Can't Tell: "Can't Tell"
         survey_3:
             colname: "scaling"
             type: "radio"
@@ -44,6 +44,7 @@ default:
                 2: 2
                 3: 3
                 4: 4
+                Can't Tell: "Can't Tell"
     image_opts: 
         width: "625px"
         height: "425px"
