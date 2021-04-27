@@ -387,6 +387,9 @@ app_server <- function( input, output, session ) {
         h4("We are fetching more data..."))
     )
     
+    #' reset to 1
+    values$ii <- 1
+    
     #' get all data and previous data
     values$allDf <- get_all_image_source(
       syn = syn, 
@@ -432,9 +435,6 @@ app_server <- function( input, output, session ) {
         curr_index = values$ii,
         survey_config = config$survey_opts)
       
-      #' reset button 
-      values$ii <- 1
-      
       #' re-render image
       callModule(mod_render_image_server, 
                  "render_image_ui_1",
@@ -465,11 +465,12 @@ app_server <- function( input, output, session ) {
                     all_of(survey_config$survey_colnames),
                     fileColumnName,
                     annotationTimestamp)
-    DT::datatable(data, options = list(searching = FALSE,
-                                    lengthChange= FALSE))
+    DT::datatable(data, options = list(
+      searching = FALSE, lengthChange= FALSE))
   })
   
   observe({
-    print(values$userInput)
+    print(values$useDf)
+    print(values$ii)
   })
 }
