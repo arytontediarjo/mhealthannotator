@@ -39,6 +39,7 @@ app_ui <- function(request) {
         fluidRow(
           br(),
           column(width = 7, 
+                 align = "center",
                  div(mod_render_image_ui("render_image_ui_1"))),
           column(width = 4,
                  offset = 1,
