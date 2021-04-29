@@ -374,7 +374,7 @@ app_server <- function( input, output, session ) {
       current_annotator = values$currentAnnotator,
       output_filename = values$fileName,
       activityName = "run annotations",
-      used = synapse_config$synapse_tbl,
+      used = synapse_config$synapse_tbl
     )
     
     #' remove when done
