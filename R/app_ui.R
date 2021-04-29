@@ -20,19 +20,20 @@ app_ui <- function(request) {
     tabItems(
       tabItem(tabName = "about",
               h1("Welcome to the mHealth Annotator App!"),
-              div("This app will help you parse through Synapse Filehandles and"),
-              div("visualize each file handle for annotating image"),
+              div("This app will help you parse through Synapse Table Filehandles and"),
+              div("visualize each file handles for mage annotations"),
               h2("Tutorial:"),
+              div("- Go to the 'Annotator-App' Tab"),
               div("- You can go through each image by using '<-/->' button"),
-              div("- When you are done you can save the images by pressing 'Save Results' button"),
-              div("- When you ran out of images you can press 'Refresh Session' to get more images"),
-              div("- We will not log your image annotations if you have `None Selected` for both prompts")
+              div("- Score accordingly based on each prompts on the right-side"),
+              div("- When you are finished, you can save the images by pressing 'Save Results' button"),
+              div("- After saving, we will fetch you more data into the session"),
       ),
       tabItem(
         tabName = "annotator",
         fluidRow(
           column(width = 3, infoBoxOutput("userBox", width = "200px")),
-          column(width = 3, infoBoxOutput("progressBox", width = "300px")),
+          column(width = 4, infoBoxOutput("progressBox", width = "300px")),
           column(width = 4, infoBoxOutput("totalCurated", width = "300px"))
         ),
         fluidRow(

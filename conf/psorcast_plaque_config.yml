@@ -15,6 +15,17 @@ default:
             - "createdOn"
     survey_opts:
         survey_1:
+                colname: "PGA"
+                type: "radio"
+                prompt: "PGA:"
+                input_choices:
+                    0: 0
+                    1: 1
+                    2: 2
+                    3: 3
+                    4: 4
+                    Can't Tell: "Can't Tell"
+        survey_2:
             colname: "erythema"
             type: "radio"
             prompt: "Erythema:"
@@ -25,7 +36,7 @@ default:
                 3: 3
                 4: 4
                 Can't Tell: "Can't Tell"
-        survey_2:
+        survey_3:
             colname: "induration"
             type: "radio"
             prompt: "Induration:"
@@ -36,7 +47,7 @@ default:
                 3: 3
                 4: 4
                 Can't Tell: "Can't Tell"
-        survey_3:
+        survey_4:
             colname: "scaling"
             type: "radio"
             prompt: "Scaling:"

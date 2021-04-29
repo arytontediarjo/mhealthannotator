@@ -69,3 +69,12 @@ clear_directory <- function(user_dir, annotator){
         "{user_dir}/{annotator}/processed_files/*"), 
         recursive = T, force = T)
 }
+
+parse_initial_selection <- function(input){
+    if(is.null(input)){
+        character(0)
+    }else{
+        input
+    }
+}
+

@@ -1,10 +1,6 @@
 parse_select_value <- function(row_input, selected){
     if(is.na(row_input)){
-        if(is.null(selected)){
-            return(character(0))
-        }else{
-            return(selected)
-        }
+        parse_initial_selection(selected)
     }else{
         return(
             stringr::str_split(row_input, ",") %>% 

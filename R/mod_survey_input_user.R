@@ -24,15 +24,15 @@ mod_survey_input_user_ui <- function(id){
         choices <- x$input_choices
         prompt <- x$prompt
         colname <- x$colname
-        selected <- x$selected
+        selected <- parse_initial_selection(x$selected)
         buttonType <- x$type
         
         if(buttonType == "radio"){
           #' set button
           radioGroupButtons(
-            size = 'sm',
+            size = 'normal',
             inputId = ns(colname),
-            selected = character(0),
+            selected = selected,
             label = h4(prompt),
             choices = choices,
             checkIcon = list(
