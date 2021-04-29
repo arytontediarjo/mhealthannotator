@@ -5,6 +5,7 @@ store_to_synapse <- function(syn,
                              stored_data, 
                              current_annotator,
                              output_filename, ...){
+    args <- list(...)
     new_data %>% 
         dplyr::select(-any_of(c("filePath", "imagePath"))) %>%
         dplyr::mutate(annotator = current_annotator) %>%
@@ -19,6 +20,7 @@ store_to_synapse <- function(syn,
     file <- synapseclient$File(
         output_filename, 
         parentId = synapse_parent_id)
-    syn$store(file, activityName = activityName, used = used)
+    syn$store(
+        file, activityName = args$activityName, used = args$used)
     unlink(output_filename)
 }
