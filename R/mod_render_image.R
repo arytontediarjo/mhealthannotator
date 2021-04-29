@@ -31,11 +31,11 @@ mod_render_image_server <- function(input, output,
     outfile <- tempfile(fileext='.jpg')
     
     # Generate the image file
-    jpeg(outfile, res = 72*pixelratio)
+    jpeg(outfile, res = 150*pixelratio)
     dev.off()
     list(src = obj_path,
-         height = input_height,
-         width  = input_width)
+         height = "100%",
+         width  = "auto")
   }, deleteFile=FALSE)
  
 }
