@@ -372,7 +372,9 @@ app_server <- function( input, output, session ) {
       new_data = values$useDf,
       stored_data = values$curatedDf,
       current_annotator = values$currentAnnotator,
-      output_filename = values$fileName
+      output_filename = values$fileName,
+      activityName = "run annotations",
+      used = synapse_config$synapse_tbl,
     )
     
     #' remove when done
