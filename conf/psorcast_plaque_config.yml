@@ -1,7 +1,7 @@
 default:
     synapse_opts:
         synID:
-            parent_output: "syn25614060"
+            parent_output: "syn25614357"
             tbl: "syn22281748" 
         output_filename: "psoriasis_plaque_annotations.tsv"
         column_targets:
@@ -9,7 +9,7 @@ default:
             - "psoriasisAreaPhoto.png"
         unique_identifier: 
             - "recordId" # unique identifier for that file in synapse table
-        n_batch: 5
+        n_batch: 50
         keep_metadata:
             - "participantID"
             - "createdOn"
