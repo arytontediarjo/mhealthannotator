@@ -102,7 +102,8 @@ app_server <- function( input, output, session ) {
           uid = synapse_config$uid, 
           survey_colnames = survey_config$survey_colnames,
           keep_metadata = synapse_config$keep_metadata,
-          n_batch = synapse_config$n_batch
+          n_batch = synapse_config$n_batch,
+          sort_keys = synapse_config$sort_keys
         )
         
         #' get number images
@@ -422,7 +423,8 @@ app_server <- function( input, output, session ) {
         uid = synapse_config$uid, 
         survey_colnames = survey_config$survey_colnames,
         keep_metadata = synapse_config$keep_metadata,
-        n_batch = synapse_config$n_batch
+        n_batch = synapse_config$n_batch,
+        sort_keys = synapse_config$sort_keys
       )
       
       #' get number images
@@ -461,10 +463,12 @@ app_server <- function( input, output, session ) {
   ##################################
   output$metadata_table = DT::renderDataTable({
     data <- values$useDf[values$ii,] %>%
-      dplyr::select(all_of(synapse_config$keep_metadata), 
-                    all_of(survey_config$survey_colnames),
-                    fileColumnName,
-                    annotationTimestamp)
+      dplyr::select(
+        all_of(synapse_config$uid),
+        all_of(synapse_config$keep_metadata), 
+        all_of(survey_config$survey_colnames),
+        fileColumnName,
+        annotationTimestamp)
     DT::datatable(data, options = list(
       searching = FALSE, lengthChange= FALSE))
   })

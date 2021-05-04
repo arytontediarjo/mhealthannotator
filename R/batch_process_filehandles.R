@@ -55,7 +55,14 @@ batch_process_filehandles <- function(syn,
                                       uid, 
                                       survey_colnames,
                                       keep_metadata,
-                                      n_batch){
+                                      n_batch,
+                                      sort_keys){
+  
+  #' check sorting
+  if(is.null(sort_keys)){
+    sort_keys <- uid
+  }
+  
   #' retrieve images
   result <- values$allDf %>%
     dplyr::anti_join(
@@ -80,7 +87,8 @@ batch_process_filehandles <- function(syn,
         survey_colnames, function(x){
         tibble(!!sym(x) := as.character(NA))
       }))) %>%
-    dplyr::mutate(annotationTimestamp = NA_character_)
+    dplyr::mutate(annotationTimestamp = NA_character_) %>%
+    dplyr::arrange(!!sym(sort_keys))
   return(result)
 }
     
