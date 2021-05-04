@@ -1,7 +1,7 @@
 default:
     synapse_opts:
         synID:
-            parent_output: "syn22311179"
+            parent_output: "syn24986703"
             tbl: "syn12514611" 
         output_filename: "annotator_test.tsv"
         column_target:
@@ -30,9 +30,9 @@ default:
             prompt: "Is this phone inside the pocket?"
             input_choices:
                 In Pocket: "In Pocket"
-                Partially in Pockett: "Partially in Pocket"
+                Partially in Pocket: "Partially in Pocket"
                 Not in Pocket: "Not in Pocket"
                 Can't Tell: "Can't Tell"
     image_opts: 
-        width: "400px"
+        width: "750px"
         height: "450px"

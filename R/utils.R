@@ -37,6 +37,7 @@ parse_synapse_opts <- function(config){
     synapse_config$keep_metadata <- config$synapse_opts$keep_metadata
     synapse_config$output_parent_id <- config$synapse_opts$synID$parent_output
     synapse_config$output_filename <- config$synapse_opts$output_filename
+    synapse_config$sort_keys <- config$synapse_opts$sort_keys
     
     #' return list of values
     return(synapse_config)

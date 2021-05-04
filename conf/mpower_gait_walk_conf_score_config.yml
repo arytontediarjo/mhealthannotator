@@ -1,18 +1,20 @@
 default:
     synapse_opts:
         synID:
-            parent_output: "syn24986703"
+            parent_output: "syn25672221"
             tbl: "syn25671988" 
         output_filename: "AnnotatedGaitSensor_pred_score.tsv"
         column_target:
             - "walk_motion.json"
         unique_identifier: 
             - "recordId"
-        n_batch: 50
+        n_batch: 5
         keep_metadata:
             - "healthCode"
             - "createdOn"
             - "phoneInfo"
+            - "walking_conf_score"
+        sort_keys:
             - "walking_conf_score"
     survey_opts:
         survey_1:
