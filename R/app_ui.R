@@ -4,7 +4,6 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import shinydashboard
-#' @import shinyFeedback
 #' @noRd
 app_ui <- function(request) {
   header <- dashboardHeader(
