@@ -13,6 +13,9 @@ default:
             - "healthCode"
             - "createdOn"
             - "phoneInfo"
+            - "walk_status_Larsson"
+            - "walk_status_Aryton"
+            - "walk_status_Elias"
     survey_opts:
         survey_1:
             colname: "walk_status"
