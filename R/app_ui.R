@@ -67,15 +67,19 @@ app_ui <- function(request) {
           br(),
           br(),
           conditionalPanel(
-            'input.dataset === "image-metadata"',
+            'input.dataset === "metadata-table"',
           ),
           conditionalPanel(
-            'input.dataset === "additional-info"',
+            'input.dataset === "additional-table"',
           ),
 
           tabsetPanel(id = 'dataset',
-                      tabPanel("image-metadata", DT::dataTableOutput("mytable")),
-                      tabPanel("additional-info", DT::dataTableOutput("featuretable"))),
+                      tabPanel(
+                        "metadata-table", 
+                        DT::dataTableOutput("metadata_table")),
+                      tabPanel(
+                        "additional-table", 
+                        DT::dataTableOutput("additional_table")))
         )
       )
     ),

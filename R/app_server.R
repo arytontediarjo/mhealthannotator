@@ -459,7 +459,7 @@ app_server <- function( input, output, session ) {
   ##################################
   #' render data table
   ##################################
-  output$mytable = DT::renderDataTable({
+  output$metadata_table = DT::renderDataTable({
     data <- values$useDf[values$ii,] %>%
       dplyr::select(all_of(synapse_config$keep_metadata), 
                     all_of(survey_config$survey_colnames),
