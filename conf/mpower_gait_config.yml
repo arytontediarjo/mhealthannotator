@@ -8,11 +8,13 @@ default:
             - "walk_motion.json"
         unique_identifier: 
             - "recordId"
-        n_batch: 5
+        n_batch: 50
         keep_metadata:
             - "healthCode"
             - "createdOn"
             - "phoneInfo"
+        sort_keys:
+            - "recordId"
     survey_opts:
         survey_1:
             colname: "walk_status"
