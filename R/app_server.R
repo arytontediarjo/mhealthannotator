@@ -469,8 +469,11 @@ app_server <- function( input, output, session ) {
         all_of(survey_config$survey_colnames),
         fileColumnName,
         annotationTimestamp)
-    DT::datatable(data, options = list(
-      searching = FALSE, lengthChange= FALSE))
+    DT::datatable(
+      data, options = list(
+        searching = FALSE, 
+        scrollX = TRUE,
+        lengthChange= FALSE))
   })
   
   observe({
