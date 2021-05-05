@@ -1,25 +1,49 @@
-#' @import stats
-#' @import tidyr
-#' @import ggplot2
-#' @import magrittr
-get_image_batch <- function(syn, 
-                            data,
-                            synapse_tbl,
-                            filehandle_cols,
-                            uid, 
-                            keep_metadata,
-                            n_batch,
-                            parallel = FALSE,
-                            output_location,
-                            cache_directory){
-  syn$cache$cache_root_dir <- cache_directory
+#' Get Table Unique Identifier String Filter
+#' 
+#' This is a helper function to build string filter (SQL-like)
+#' for filtering Synapse Table before downloading files 
+#' 
+#' Note: This is done to enable small-batch download
+#' 
+#' @param uid unique identifier used to 
+#' @return a string of unique identifier that will
+#' be included in the batch with parentheses 
+get_table_string_filters <- function(uid){
+  uid %>% 
+    purrr::map_chr(., function(x){glue::glue("'", x, "'")}) %>%
+    paste0(., collapse = ",") %>%
+    glue::glue("(", ., ")")
+}
+
+
+#' Get unannotated files in batch
+#' 
+#' Helper function for downloading a number of Synapse table-attached 
+#' files according to input batch, and process using desired function
+#' 
+#' @param data containing un-annotated data based on each user
+#' @inheritParams batch_process_filehandles
+get_unannotated_files_in_batch <- function(syn, data, synapse_tbl_id, 
+                                           filehandle_cols, uid, 
+                                           keep_metadata, 
+                                           n_batch, output_location, 
+                                           cache_location, visualization_funs){
+  
+  # set cache location
+  syn$cache$cache_root_dir <- cache_location
+  
+  # get sql string statement for filtering data in synapse table
   get_subset <- data %>%
     dplyr::slice(1:n_batch) %>%
     .[[uid]] %>% 
-    parse_uid_to_string()
+    get_table_string_filters()
+  
+  # get synapse table entity
   entity <- syn$tableQuery(
     glue::glue(
-      "SELECT * FROM {synapse_tbl} WHERE recordId IN {get_subset}"))
+      "SELECT * FROM {synapse_tbl_id} WHERE recordId IN {get_subset}"))
+  
+  # download all table columns
   result <- syn$downloadTableColumns(
     table = entity, 
     columns = filehandle_cols) %>%
@@ -30,59 +54,104 @@ get_image_batch <- function(syn,
       filePath = value) %>%
     dplyr::mutate(filePath = unlist(filePath)) %>%
     dplyr::inner_join(data, by = c("fileHandleId")) %>%
-    dplyr::select(
-      all_of(uid), 
-      all_of(keep_metadata), 
-      fileColumnName, 
-      filePath) %>%
+    dplyr::select(all_of(uid), all_of(keep_metadata), 
+                  fileColumnName, filePath)
+}
+
+#' Visualize Synapse Table Column Files
+#' 
+#' Helper function to visualize synapse column files
+#' based on a custom function 
+#' 
+#' @param data data where it contains cached `filePath` of the table attached files
+#' @param visualization_funs custom visualization function
+#' @param output_location where to output the processed files location
+#' 
+#' @return a dataframe containing processed files
+visualize_column_files <- function(data, 
+                                   visualization_funs, 
+                                   output_location){
+  data %>% 
     dplyr::mutate(
-      imagePath = purrr::map_chr(
-        .x = filePath, 
-        output_location = output_location,
-        .f = golem::get_golem_options("visual_funs"))) %>%
-    dplyr::mutate_all(as.character) %>%
-    tidyr::drop_na(any_of(c("imagePath")))
-  return(result)
+    imagePath = purrr::map_chr(
+      .x = filePath, 
+      output_location = output_location,
+      .f = visualization_funs))
 }
 
 
-#' batch_process_filehandle Server Function
-#'
-#' @noRd 
-batch_process_filehandles <- function(syn,
-                                      values,
-                                      synapse_tbl,
-                                      filehandle_cols,
-                                      uid, 
-                                      survey_colnames,
-                                      keep_metadata,
-                                      n_batch,
-                                      sort_keys){
+#' Process Synapse Table Fileshandles
+#' 
+#' Process Synapse Table Filehandles in batch processing,
+#' will take unannotated data and batch process each 
+#' of them based on a visualization function
+#' 
+#' @param syn synapseclient
+#' @param all_data dataframe of whole data from synapse table
+#' @param curated_data dataframe of annotated ata
+#' @param synapse_tbl_id synapse source table id
+#' @param filehandle_cols filehandle column target to parse
+#' @param uid unique identifier of each files
+#' @param keep_metadata metadata to keep from the table
+#' @param n_batch number of batch per session
+#' @param output_location where to store processed files
+#' @param cache_location where to find raw files
+#' @param visualization_funs function to visualize data
+#' 
+#' @import tibble
+#' @import magrittr
+#' @import dplyr
+#' @import purrr
+#' @import tidyr
+#' @import glue
+#' 
+#' @return a dataframe containing processed filecolumns that will be used
+#' for rendering
+#' 
+#' @export
+#' @examples 
+#' batch_process_filehandles(...)
+batch_process_filehandles <- function(syn, all_data, curated_data, 
+                                      synapse_tbl_id, filehandle_cols, 
+                                      uid, survey_colnames,
+                                      keep_metadata, n_batch, sort_keys,
+                                      output_location, cache_location,
+                                      visualization_funs){
   
-  #' check sorting
+  # check sorting
   if(is.null(sort_keys)){
     sort_keys <- uid
   }
   
-  #' retrieve images
-  result <- values$allDf %>%
+  # get unannotated data and corresponding filehandleids
+  all_data %>%
     dplyr::anti_join(
-      values$curatedDf,
-      by = c(uid, "fileColumnName"))  %>%
-    get_image_batch(syn = syn,
-                    data = .,
-                    uid = uid,
-                    synapse_tbl = synapse_tbl,
-                    filehandle_cols = filehandle_cols,
-                    keep_metadata = keep_metadata,
-                    n_batch = n_batch,
-                    parallel = FALSE,
-                    output_location = file.path("user_dir",
-                                                values$currentAnnotator,
-                                                "processed_files"),
-                    cache_directory = file.path("user_dir",
-                                                values$currentAnnotator,
-                                                "downloaded_files")) %>% 
+      curated_data,
+      by = c(uid, "fileColumnName")) %>%
+    
+    # get unannotated files from synapse
+    get_unannotated_files_in_batch(
+      syn = syn,
+      data = .,
+      uid = uid,
+      synapse_tbl_id = synapse_tbl_id,
+      filehandle_cols = filehandle_cols,
+      keep_metadata = keep_metadata,
+      n_batch = n_batch,
+      output_location = output_location,
+      cache_location = cache_location) %>% 
+    
+    # visualize data
+    visualize_column_files(
+      data = .,
+      visualization_funs = visualization_funs,
+      output_location = output_location) %>%
+    
+    # clean data by converting all to character
+    # drop NA, add survey columns, and several other
+    # metadata
+    dplyr::mutate_all(as.character) %>%
+    tidyr::drop_na(any_of(c("imagePath"))) %>%
     dplyr::bind_cols(
       (survey_tbl <- purrr::map_dfc(
         survey_colnames, function(x){
@@ -90,12 +159,4 @@ batch_process_filehandles <- function(syn,
       }))) %>%
     dplyr::mutate(annotationTimestamp = NA_character_) %>%
     dplyr::arrange(!!sym(sort_keys))
-  return(result)
 }
-    
-## To be copied in the UI
-# mod_batch_process_filehandle_ui("batch_process_filehandle_ui_1")
-    
-## To be copied in the server
-# callModule(mod_batch_process_filehandle_server, "batch_process_filehandle_ui_1")
- 

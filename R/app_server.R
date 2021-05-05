@@ -1,41 +1,60 @@
-#' The application server-side
+#' App Server
 #' 
-#' @param input,output,session Internal parameters for {shiny}. 
-#'     DO NOT REMOVE.
+#' Create the server-side component of mhealthannotator app
+#' 
 #' @import shiny
+#' @import shinydashboard
 #' @import waiter
-#' @import reticulate
-#' @noRd
+#' @import reticulate 
+#' @param input Shiny input
+#' @param output Shiny output
+#' @param session Shiny session
+#' @return none
+#' @export
+#' @examples
+#' \dontrun{
+#' shinyApp(ui = app_ui, server = app_server)
+#' }
 app_server <- function( input, output, session ) {
   
-  #' instantiate synapse
+  # instantiate synapse
   syn <- synapseclient$Synapse()
   
-  #' read configuraiton file
+  # read configuraiton file
   config_path <- file.path(
-    "conf", golem::get_golem_options("annotator_config"))
+    "conf", 
+    golem::get_golem_options("annotator_config"))
   config <- config::get(file = config_path)
   
   # parse all configuration type
   synapse_config <- config %>% parse_synapse_opts()
   survey_config <- config %>% parse_survey_opts()
   image_config <- config %>% parse_image_opts()
+  visualization_funs <-  golem::get_golem_options("visual_funs")
   
-  #' define reactive values
+  
+  # define reactive values
   values <- reactiveValues(
     ii=1,  # image index
     userInput = list(), # what is the user input
-    totalImages = NA, # number of images
-    allDf = NA,
-    useDf = NA, # what is the dataframe being used for annotating
+    allDf = NA, # whole dataframe
+    useDf = NA, # dataframe being used for current annotating session
     curatedDf = NA, # dataframe that has already been stored in synapse
-    sessionNumImages= NA, #current session number of image
     currentAnnotator = NA, # who is the current annotator
     parentId = NA, # what is the parent id 
     fileName = NA, # what is the filename
-    postConfirm = FALSE # extra handler if already been confirmed
+    postConfirm = FALSE, # extra handler if already been confirmed
+    cacheLocation = NA,
+    outputLocation = NA
   )
+  
+  # read synapse session cookie
   session$sendCustomMessage(type="readCookie", message=list())
+  
+  
+  #########################
+  # instantiate shiny app
+  #########################
   observeEvent(input$cookie, {
     # If there's no session token, prompt user to log in
     if (input$cookie == "unauthorized") {
@@ -54,35 +73,28 @@ app_server <- function( input, output, session ) {
       tryCatch({
         syn$login(sessionToken = input$cookie, rememberMe = FALSE)
         
-        #' update data after updating session
+        # update data after updating session
         values$currentAnnotator <- get_current_annotator(syn)
         values$fileName <- get_output_filename(
           filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
+        # create user_directory
         clear_directory("user_dir", values$currentAnnotator)
         create_user_directory("user_dir", values$currentAnnotator)
         
-        #' get all data and previous data
-        values$allDf <- get_all_image_source(
-          syn = syn, 
-          filehandle_cols = synapse_config$filehandle_cols,
-          synapse_tbl = synapse_config$synapse_tbl)
+        # set cache and output location based on user
+        values$cacheLocation <- file.path(
+          "user_dir", values$currentAnnotator, "downloaded_files")
+        values$outputLocation <- file.path(
+          "user_dir", values$currentAnnotator, "processed_files")
         
-        #' get total images needed to be curatetd
-        values$total_images <- values$allDf %>% nrow()
+        # load all data and stored data from synapse
+        values <- load_data(
+          syn, synapse_config, survey_config, values)
         
-        #' get previous image that has been curated
-        values$curatedDf <- get_prev_curated_images(
-          syn = syn,
-          parent_id = synapse_config$output_parent_id,
-          stored_filename = values$fileName,
-          uid = synapse_config$uid,
-          keep_metadata = synapse_config$keep_metadata,
-          survey_colnames = survey_config$survey_colnames
-        )
-        
-        if(nrow(values$curatedDf) ==  values$total_images){
+        # check if user has annotated everything
+        if(nrow(values$curatedDf) ==  nrow(values$allDf)){
           waiter_update(
             html = tagList(
               img(src = "www/synapse_logo.png", height = "120px"),
@@ -93,23 +105,24 @@ app_server <- function( input, output, session ) {
           return("")
         }
         
-        #' batch process filehandles
+        # batch process filehandles
         values$useDf <- batch_process_filehandles(
           syn = syn,
-          values = values,
+          all_data = values$allDf,
+          curated_data = values$curatedDf,
           synapse_tbl = synapse_config$synapse_tbl,
           filehandle_cols = synapse_config$filehandle_cols,
           uid = synapse_config$uid, 
           survey_colnames = survey_config$survey_colnames,
           keep_metadata = synapse_config$keep_metadata,
           n_batch = synapse_config$n_batch,
-          sort_keys = synapse_config$sort_keys
+          sort_keys = synapse_config$sort_keys,
+          output_location = values$outputLocation,
+          cache_location = values$cacheLocation,
+          visualization_funs = visualization_funs
         )
         
-        #' get number images
-        values$numImages <- values$useDf %>% nrow(.)
-        
-        #' return feedback message if all images are annotated
+        # return feedback message if all images are annotated
         if(nrow(values$curatedDf) == nrow(values$allDf)){
           waiter_update(
             html = tagList(
@@ -121,7 +134,7 @@ app_server <- function( input, output, session ) {
           return("")
         }
         
-        #' update waiter loading screen once login successful
+        # update waiter loading screen once login successful
         waiter::waiter_update(
           html = tagList(
             img(src = "www/loading.gif"),
@@ -130,7 +143,7 @@ app_server <- function( input, output, session ) {
           )
         )
         
-        #' update waiter loading screen once login successful
+        # update waiter loading screen once login successful
         waiter::waiter_update(
           html = tagList(
             img(src = "www/synapse_logo.png", height = "120px"),
@@ -140,7 +153,7 @@ app_server <- function( input, output, session ) {
         Sys.sleep(3)
         waiter::waiter_hide()
       }, error = function(err) {
-        #' get error message
+        # get error message
         Sys.sleep(2)
         error_msg <- stringr::str_squish(
           stringr::str_replace_all(geterrmessage(), "\n", ""))
@@ -149,13 +162,15 @@ app_server <- function( input, output, session ) {
         tmp <- file.path(
           "log",
           glue::glue(
-            gsub('[[:punct:] ]+',"", lubridate::now() %>% as.character(.)), 
+            gsub('[[:punct:] ]+',"", 
+                 lubridate::now() %>% 
+                   as.character(.)), 
             "_error.log"))
         sink(tmp)
         cat(glue::glue("ERROR: {error_msg}"))
         sink()
         
-        #' update using waiter if there is error message in logfile
+        # update using waiter if there is error message in logfile
         waiter::waiter_update(
           html = tagList(
             img(src = "synapse_logo.png", height = "120px"),
@@ -174,7 +189,7 @@ app_server <- function( input, output, session ) {
   })
   
   #######################
-  #' render user box
+  # render user box
   #######################
   output$userBox <- renderInfoBox({
     infoBox(
@@ -184,27 +199,27 @@ app_server <- function( input, output, session ) {
   })
 
   #########################
-  #' render progress box
+  # render progress box
   #########################
   output$progressBox <- renderInfoBox({
     total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
     infoBox(
       "Session Progress", glue::glue(total_curated,
-                                     "/",values$numImages,
-                                     " (", round(100 * total_curated/values$numImages, 1),"% Annotated)"),
+                                     "/", nrow(values$useDf),
+                                     " (", round(100 * total_curated/nrow(values$useDf), 1),"% Annotated)"),
       icon = icon("percentage"),
       color = "green"
     )
   })
 
   #########################
-  #' render total curated
+  # render total curated
   #########################
   output$totalCurated <- renderInfoBox({
-    perc_curated <- (values$curatedDf %>% nrow())/(values$total_images)
+    perc_curated <- (values$curatedDf %>% nrow())/(nrow(values$allDf))
     infoBox(
       "Total Curation in Synapse", glue::glue(values$curatedDf %>% nrow(),
-                                              "/", values$total_images,
+                                              "/", nrow(values$allDf),
                                               " (", round(100 * perc_curated, 1),"% Annotated)"),
       icon = icon("tasks"),
       color = "purple"
@@ -212,7 +227,7 @@ app_server <- function( input, output, session ) {
   })
 
   ##############################################
-  #' render survey prompt module
+  # render survey prompt module
   ##############################################
   callModule(mod_survey_input_user_server, 
              "ui_1", values = values)
@@ -222,9 +237,9 @@ app_server <- function( input, output, session ) {
              input_width = image_config$width,
              input_height = image_config$height)
 
-  #################
-  #' rended go forward button
-  #################
+  ##################################
+  # render go forward button
+  ##################################
   observeEvent(input$goNext, {
     if("" %in% values$userInput){
       sendSweetAlert(
@@ -240,7 +255,7 @@ app_server <- function( input, output, session ) {
         width = NULL
       )
     }else{
-      #' store survey input 
+      # store survey input 
       values$useDf <- values$useDf %>%
         survey_input_store(
           curr_index = values$ii, 
@@ -250,7 +265,7 @@ app_server <- function( input, output, session ) {
           uid = synapse_config$uid
         )
       
-      #' call module to render image
+      # call module to render image
       callModule(mod_render_image_server, 
                  "render_image_ui_1",
                  obj_path = values$useDf$imagePath[values$ii],
@@ -258,7 +273,7 @@ app_server <- function( input, output, session ) {
                  input_height = image_config$height)
       
       total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
-      if((total_curated == values$numImages) & !values$postConfirm){
+      if((total_curated == nrow(values$useDf)) & !values$postConfirm){
         ask_confirmation(
           inputId = "confirmation",
           title = "Thank You!! \n You have finished this session!",
@@ -284,7 +299,7 @@ app_server <- function( input, output, session ) {
   })
 
   #################
-  #' render go back button
+  # render go back button
   ##################
   observeEvent(input$goPrev, {
     if("" %in% values$userInput){
@@ -313,7 +328,7 @@ app_server <- function( input, output, session ) {
                  input_width = image_config$width,
                  input_height = image_config$height)
       total_curated <- (values$useDf %>% tidyr::drop_na() %>% nrow(.))
-      if((total_curated == values$numImages) & !values$postConfirm){
+      if((total_curated == nrow(values$useDf)) & !values$postConfirm){
         ask_confirmation(
           inputId = "confirmation",
           title = "Thank You!! \n You have finished your annotation!",
@@ -337,7 +352,7 @@ app_server <- function( input, output, session ) {
   })
   
   ##################################
-  #' ask for confirmation
+  # ask for confirmation
   ##################################
   observeEvent(input$confirmation, {
     if(input$confirmation){
@@ -346,18 +361,18 @@ app_server <- function( input, output, session ) {
   })
 
   ##################################
-  #' render save button
+  # render save button
   ##################################
   observeEvent(input$save, {
     req(input$save)
     
-    #' reset post confirmation
+    # reset post confirmation
     values$postConfirm <- FALSE
     
-    #' clear directory
+    # clear directory
     clear_directory("user_dir", values$currentAnnotator)
     
-    #' show modal spinner
+    # show modal spinner
     shinybusy::show_modal_spinner(
       spin = "fading-circle",
       text = shiny::tagList(
@@ -365,7 +380,7 @@ app_server <- function( input, output, session ) {
         h4("We are uploading your data to Synapse."))
     )
     
-    #' save to synapse
+    # save to synapse
     store_to_synapse(
       syn = syn,
       synapseclient = synapseclient,
@@ -376,11 +391,11 @@ app_server <- function( input, output, session ) {
       output_filename = values$fileName
     )
     
-    #' remove when done
+    # remove when done
     Sys.sleep(2)
     shinybusy::remove_modal_spinner()
     
-    #' show modal spinner
+    # show modal spinner
     shinybusy::show_modal_spinner(
       spin = "fading-circle",
       text = shiny::tagList(
@@ -388,67 +403,53 @@ app_server <- function( input, output, session ) {
         h4("We are fetching more data..."))
     )
     
-    #' reset to 1
+    # reset to 1
     values$ii <- 1
     
-    #' get all data and previous data
-    values$allDf <- get_all_image_source(
-      syn = syn, 
-      filehandle_cols = synapse_config$filehandle_cols,
-      synapse_tbl = synapse_config$synapse_tbl)
+    # reload data from synapse
+    values <- load_data(
+      syn, synapse_config, survey_config, values)
     
-    #' get total images needed to be curatetd
-    values$total_images <- values$allDf %>% nrow()
-    
-    #' get previous image that has been curated
-    values$curatedDf <- get_prev_curated_images(
-      syn = syn,
-      parent_id = synapse_config$output_parent_id,
-      stored_filename = values$fileName,
-      uid = synapse_config$uid,
-      keep_metadata = synapse_config$keep_metadata,
-      survey_colnames = synapse_config$survey_colnames
-    )
-    
-    #' refresh if ran out of images
-    if(values$total_images == values$curatedDf %>% nrow()){
+    # refresh if ran out of images
+    if(nrow(values$allDf) == nrow(values$curatedDf)){
       shinyjs::refresh()
     }else{
-      #' batch process filehandles
+      # batch process filehandles
       values$useDf <- batch_process_filehandles(
         syn = syn,
-        values = values,
+        all_data = values$allDf,
+        curated_data = values$curatedDf,
         synapse_tbl = synapse_config$synapse_tbl,
         filehandle_cols = synapse_config$filehandle_cols,
         uid = synapse_config$uid, 
         survey_colnames = survey_config$survey_colnames,
         keep_metadata = synapse_config$keep_metadata,
         n_batch = synapse_config$n_batch,
-        sort_keys = synapse_config$sort_keys
+        sort_keys = synapse_config$sort_keys,
+        output_location = values$outputLocation,
+        cache_location = values$cacheLocation,
+        visualization_funs = visualization_funs
       )
       
-      #' get number images
-      values$numImages <- values$useDf %>% nrow(.)
-      
-      #' update buttons
+      # update buttons
       values <- update_buttons(
         reactive_values = values,
         session = session, 
         curr_index = values$ii,
         survey_config = config$survey_opts)
       
-      #' re-render image
+      # re-render image
       callModule(mod_render_image_server, 
                  "render_image_ui_1",
                  obj_path = values$useDf$imagePath[values$ii],
                  input_width = image_config$width,
                  input_height = image_config$height)
       
-      #' remove when done
+      # remove when done
       Sys.sleep(2)
       shinybusy::remove_modal_spinner()
       
-      #' send sweet alert
+      # send sweet alert
       sendSweetAlert(
         session = session,
         title = "Session is updated!",
@@ -459,7 +460,7 @@ app_server <- function( input, output, session ) {
   })
   
   ##################################
-  #' render data table
+  # render data table
   ##################################
   output$metadata_table = DT::renderDataTable({
     data <- values$useDf[values$ii,] %>%

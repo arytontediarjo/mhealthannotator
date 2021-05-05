@@ -1,21 +1,32 @@
-#' The application User-Interface
+#' App UI
 #' 
-#' @param request Internal parameter for `{shiny}`. 
-#'     DO NOT REMOVE.
+#' Create the UI component of mhealthannotator Shiny App
 #' @import shiny
 #' @import shinydashboard
-#' @noRd
+#' @param request Shiny request
+#' @export
+#' @examples
+#' \dontrun{
+#' shinyApp(ui = app_ui, server = app_server)
+#' }
 app_ui <- function(request) {
   header <- dashboardHeader(
     title = "Sage Bionetworks - Digital Health Image Annotator",
     titleWidth = 550)
   sidebar <- dashboardSidebar(
     sidebarMenu(
-      menuItem(h4("About"), tabName = "about", icon = icon("question-circle")),
-      menuItem(h4("Annotator-App"), icon = icon("user-nurse"), tabName = "annotator"))
+      menuItem(h4("About"), 
+               tabName = "about", 
+               icon = icon("question-circle")),
+      menuItem(h4("Annotator-App"), 
+               icon = icon("user-nurse"), 
+               tabName = "annotator"))
   )
   body <- dashboardBody(
+    #' Add resoources in www
     golem_add_external_resources(),
+    
+    #' create tab items for UI
     tabItems(
       tabItem(tabName = "about",
               h1("Welcome to the mHealth Annotator App!"),
@@ -28,6 +39,8 @@ app_ui <- function(request) {
               div("- When you are finished, you can save the images by pressing 'Save Results' button"),
               div("- After saving, we will fetch you more data into the session"),
       ),
+      
+      #' annotator UI
       tabItem(
         tabName = "annotator",
         fluidRow(
@@ -82,7 +95,8 @@ app_ui <- function(request) {
         )
       )
     ),
-    ## waiter loading screen
+    
+    #' instantiate waiter loading screen
     waiter::use_waiter(),
     waiter::waiter_show_on_load(
       html = tagList(
@@ -92,13 +106,13 @@ app_ui <- function(request) {
       color = "#424874"
     )
   )
+  
+  #' consolidata header, sidebar and body
   dashboardPage(
     header,
     sidebar,
     body
   )
-  
-    
 }
 
 #' Add external Resources to the Application
@@ -108,7 +122,6 @@ app_ui <- function(request) {
 #' 
 #' @import shiny
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
-#' @noRd
 golem_add_external_resources <- function(){
   
   golem::add_resource_path(
@@ -125,8 +138,6 @@ golem_add_external_resources <- function(){
       app_title = 'mhealthannotator'
     ),
     tags$script(src = "www/readCookie.js")
-    # Add here other external resources
-    # for example, you can add shinyalert::useShinyalert() 
   )
 }
 
