@@ -60,3 +60,29 @@ get_all_image_source <- function(syn, filehandle_cols, synapse_tbl){
     )
   return(all_image_data)
 }
+
+
+load_data <- function(syn, 
+                      synapse_config,
+                      survey_config,
+                      values){
+  #' get all data and previous data
+  values$allDf <- get_all_image_source(
+    syn = syn, 
+    filehandle_cols = synapse_config$filehandle_cols,
+    synapse_tbl = synapse_config$synapse_tbl)
+  
+  #' get previous image that has been curated
+  values$curatedDf <- get_prev_curated_images(
+    syn = syn,
+    parent_id = synapse_config$output_parent_id,
+    stored_filename = values$fileName,
+    uid = synapse_config$uid,
+    keep_metadata = synapse_config$keep_metadata,
+    survey_colnames = survey_config$survey_colnames
+  )
+  return(values)
+}
+  
+  
+  
