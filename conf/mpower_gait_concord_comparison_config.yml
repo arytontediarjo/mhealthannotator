@@ -1,7 +1,7 @@
 default:
     synapse_opts:
         synID:
-            parent_output: "syn24986703"
+            parent_output: "syn25672221"
             tbl: "syn25673175" 
         output_filename: "AnnotatedGaitSensor_concord_comparison.tsv"
         column_target:
