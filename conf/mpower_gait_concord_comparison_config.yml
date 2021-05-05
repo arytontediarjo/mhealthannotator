@@ -2,7 +2,7 @@ default:
     synapse_opts:
         synID:
             parent_output: "syn24986703"
-            tbl: "syn25671967" 
+            tbl: "syn25673175" 
         output_filename: "AnnotatedGaitSensor_concord_comparison.tsv"
         column_target:
             - "walk_motion.json"
@@ -16,6 +16,8 @@ default:
             - "walk_status_Larsson"
             - "walk_status_Aryton"
             - "walk_status_Elias"
+        sort_keys:
+            - "recordId"
     survey_opts:
         survey_1:
             colname: "walk_status"

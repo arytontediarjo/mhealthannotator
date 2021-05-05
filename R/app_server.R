@@ -475,9 +475,4 @@ app_server <- function( input, output, session ) {
         scrollX = TRUE,
         lengthChange= FALSE))
   })
-  
-  observe({
-    print(values$useDf)
-    print(values$ii)
-  })
 }

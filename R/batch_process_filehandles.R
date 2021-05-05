@@ -30,10 +30,11 @@ get_image_batch <- function(syn,
       filePath = value) %>%
     dplyr::mutate(filePath = unlist(filePath)) %>%
     dplyr::inner_join(data, by = c("fileHandleId")) %>%
-    dplyr::select(all_of(keep_metadata), 
-                  all_of(uid), 
-                  fileColumnName, 
-                  filePath) %>%
+    dplyr::select(
+      all_of(uid), 
+      all_of(keep_metadata), 
+      fileColumnName, 
+      filePath) %>%
     dplyr::mutate(
       imagePath = purrr::map_chr(
         .x = filePath, 
