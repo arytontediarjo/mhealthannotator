@@ -2,7 +2,7 @@ default:
     synapse_opts:
         synID:
             parent_output: "syn25672221"
-            tbl: "syn25671988" 
+            tbl: "syn25687738" 
         output_filename: "AnnotatedGaitSensor_pred_score.tsv"
         column_target:
             - "walk_motion.json"
@@ -13,6 +13,7 @@ default:
             - "healthCode"
             - "createdOn"
             - "phoneInfo"
+            - "diagnosis"
             - "walking_conf_score"
         sort_keys:
             - "walking_conf_score"
