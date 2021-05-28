@@ -11,7 +11,7 @@ default:
             - "recordId" # unique identifier for that file in synapse table
         n_batch: 50
         keep_metadata:
-            - "participantID"
+            - "participantId"
             - "createdOn"
     survey_opts:
         survey_1:
