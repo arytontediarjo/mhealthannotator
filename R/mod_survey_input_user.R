@@ -20,7 +20,7 @@ mod_survey_input_user_ui <- function(id){
   ns <- NS(id)
   
   #' read config file
-  config_path <- file.path("conf", golem::get_golem_options("annotator_config"))
+  config_path <- file.path("configs", golem::get_golem_options("config"))
   survey_config <- config::get(file = config_path) %>% .$survey_opts
   
   #' create based on config

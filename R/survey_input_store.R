@@ -1,6 +1,15 @@
-#' store_input Server Function
+#' Function to store survey inputs from shiny app
+#' 
+#' @param data data of annotations
+#' @param curr_index current index marker
+#' @param user_inputs input given by users
+#' @param survey_colnames columns used for the surveys
+#' @param keep_metadata what metadata to keep
+#' @param uid what are the unique ids (recordId, healthcode, participantId etc.)
 #'
-#' @noRd 
+#' @export
+#'
+#' @return dataframe of annotation based on current index
 survey_input_store <- function(data, 
                                curr_index,
                                user_inputs,
@@ -28,10 +37,3 @@ survey_input_store <- function(data,
                     annotationTimestamp)
   }, error = function(e){data})
 }
-    
-## To be copied in the UI
-# mod_store_input_ui("store_input_ui_1")
-    
-## To be copied in the server
-# callModule(mod_store_input_server, "store_input_ui_1")
- 

@@ -1,19 +1,20 @@
 #' Run the Shiny Application
 #'
-#' @param ... A series of options to be used inside the app.
+#' @param config config file to run your shiny
+#' @param funs function to generate your images for the shiny app
 #'
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
-run_app <- function(annotator_config, visual_funs) {
+run_app <- function(config, funs) {
   with_golem_options(
     app = shinyApp(
       ui = app_ui, 
       server = app_server
     ), 
     golem_opts = list(
-      annotator_config = annotator_config,
-      visual_funs = visual_funs
+      config = config,
+      funs = funs
     )
   )
 }

@@ -1,3 +1,6 @@
+#' function to parse survey question from the config file
+#' @param config annotator config file being used 
+#' @return named list of survey question and its options
 parse_survey_opts <- function(config){
     #' instantiate survey configuration
     survey_config <- list()
@@ -16,6 +19,10 @@ parse_survey_opts <- function(config){
     return(survey_config)
 }
 
+
+#' function to parse synapse options
+#' @param config config
+#' @return named list of synapse options being used
 parse_synapse_opts <- function(config){
     #' instantiate empty list
     synapse_config <- list()    
@@ -34,6 +41,10 @@ parse_synapse_opts <- function(config){
     return(synapse_config)
 }
 
+
+#' Function to parse image options
+#' @param config config
+#' @return named list of image options being used
 parse_image_opts <- function(config){
     image_config <- list()
     image_config$width <- config$image_opts$width
@@ -41,7 +52,11 @@ parse_image_opts <- function(config){
     return(image_config)
 }
 
-
+#' Function to create user directory for temporarily
+#' storing image files (to not overpopulate Shiny Server)
+#' @param user_dir_parent parent directory of the current annotator
+#' @param curr_annotator user name of the annotator
+#' @return 
 create_user_directory <- function(user_dir_parent, curr_annotator){
     #' create user directory
     dir.create(user_dir_parent) 
@@ -52,7 +67,11 @@ create_user_directory <- function(user_dir_parent, curr_annotator){
     return(user_dir)
 }
 
-
+#' Function to clear user directory
+#' storing image files (to not overpopulate Shiny Server)
+#' @param user_dir_parent directory of the current annotator
+#' @param curr_annotator user name of the annotator
+#' @return 
 clear_directory <- function(user_dir, annotator){
     unlink(glue::glue(
         "{user_dir}/{annotator}/downloaded_files/*"), 
@@ -62,6 +81,9 @@ clear_directory <- function(user_dir, annotator){
         recursive = T, force = T)
 }
 
+#' function to parse initial selection
+#' place null if user is not giving any input
+#' @param input user input
 parse_initial_selection <- function(input){
     if(is.null(input)){
         character(0)

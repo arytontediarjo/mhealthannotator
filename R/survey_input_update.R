@@ -1,3 +1,7 @@
+#' Function to parse selection (single/multiple)
+#' @param row_input input from user
+#' @param selected previously selected
+#' @return the selected shiny user input
 parse_select_value <- function(row_input, selected){
     if(is.na(row_input)){
         parse_initial_selection(selected)
@@ -9,6 +13,10 @@ parse_select_value <- function(row_input, selected){
     }
 }
 
+#' Function to parse slider (single/multiple)
+#' @param row_input input from user
+#' @param selected previously selected
+#' @return the selected shiny user input
 parse_slider_value <- function(row_input, selected){
     if(is.na(row_input)){
         return(selected)
@@ -17,12 +25,22 @@ parse_slider_value <- function(row_input, selected){
     }
 }
 
+
+#' Function to update user input shiny buttons by
+#' maintaining previously selected buttons and/or
+#' updating it with new ones
+#' 
+#' @param reactive_values access reactive values
+#' @param session access shiny session
+#' @param curr_index access current index
+#' @param config access annotator config file
+#' @return
 update_buttons <- function(reactive_values,
                            session, 
                            curr_index,
-                           survey_config){
-    select_view_ns <- NS("ui_1")
-    purrr::walk(survey_config, function(survey){
+                           config){
+    select_view_ns <- NS("survey_input_ui")
+    purrr::walk(config, function(survey){
         selected <- survey$selected
         colname <- survey$colname
         type <- survey$type

@@ -22,15 +22,15 @@ app_server <- function( input, output, session ) {
   
   # read configuraiton file
   config_path <- file.path(
-    "conf", 
-    golem::get_golem_options("annotator_config"))
+    "configs", 
+    golem::get_golem_options("config"))
   config <- config::get(file = config_path)
   
   # parse all configuration type
   synapse_config <- config %>% parse_synapse_opts()
   survey_config <- config %>% parse_survey_opts()
   image_config <- config %>% parse_image_opts()
-  visualization_funs <-  golem::get_golem_options("visual_funs")
+  visualization_funs <-  golem::get_golem_options("funs")
   
   
   # define reactive values
@@ -281,7 +281,7 @@ app_server <- function( input, output, session ) {
       
       # call module to render image
       callModule(mod_render_image_server, 
-                 "render_image_ui_1",
+                 "render_image_ui",
                  obj_path = values$useDf$imagePath[values$ii],
                  input_width = image_config$width,
                  input_height = image_config$height)
@@ -307,7 +307,7 @@ app_server <- function( input, output, session ) {
         reactive_values = values,
         session = session, 
         curr_index = values$ii,
-        survey_config = config$survey_opts)
+        config = config$survey_opts)
       
     }
   })
@@ -337,7 +337,7 @@ app_server <- function( input, output, session ) {
                            keep_metadata = synapse_config$keep_metadata,
                            uid = synapse_config$uid)
       callModule(mod_render_image_server, 
-                 "render_image_ui_1",
+                 "render_image_ui",
                  obj_path = values$useDf$imagePath[values$ii],
                  input_width = image_config$width,
                  input_height = image_config$height)
@@ -361,7 +361,7 @@ app_server <- function( input, output, session ) {
         reactive_values = values,
         session = session, 
         curr_index = values$ii,
-        survey_config = config$survey_opts)
+        config = config$survey_opts)
     }
   })
   
@@ -395,10 +395,10 @@ app_server <- function( input, output, session ) {
     )
     
     # save to synapse
-    store_to_synapse(
+    store_tbl_to_synapse(
       syn = syn,
       synapseclient = synapseclient,
-      synapse_parent_id = synapse_config$output_parent_id,
+      parent_id = synapse_config$output_parent_id,
       new_data = values$useDf,
       stored_data = values$curatedDf,
       current_annotator = values$currentAnnotator,
@@ -462,11 +462,11 @@ app_server <- function( input, output, session ) {
         reactive_values = values,
         session = session, 
         curr_index = values$ii,
-        survey_config = config$survey_opts)
+        config = config$survey_opts)
       
       # re-render image
       callModule(mod_render_image_server, 
-                 "render_image_ui_1",
+                 "render_image_ui",
                  obj_path = values$useDf$imagePath[values$ii],
                  input_width = image_config$width,
                  input_height = image_config$height)
