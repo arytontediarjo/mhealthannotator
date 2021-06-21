@@ -24,7 +24,8 @@ Imports:
     shinyFeedback,
     shinyWidgets,
     purrr,
-    data.table
+    data.table,
+    patchwork
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
