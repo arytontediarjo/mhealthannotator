@@ -1,14 +1,21 @@
-#' select_view UI Function
+#' @title UI Function for creating survey buttons
 #'
-#' @description A shiny Module.
-#'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd 
-#'
-#' @importFrom shiny NS tagList 
+#' @description Gives functionality to creating the survey buttons UI,
+#' populating with menu that can run different kinds of survey buttons
+#' based on different input types 
+#' 
+#' @export
+#' 
+#' @rdname survey_input_user
+#' 
 #' @import shinyWidgets
-#' @inerit
+#' 
+#' @param id the id
+#'
+#' @return the UI for survey inputs in ShinyApp
+#' 
+#' @example
+#' mod_render_image_ui(...)
 mod_survey_input_user_ui <- function(id){
   ns <- NS(id)
   
@@ -73,36 +80,38 @@ mod_survey_input_user_ui <- function(id){
   )
 }
     
-#' select_view Server Function
-#' @noRd 
-mod_survey_input_user_server <- function(input, output, session, values){
+#' @title Server Function for creating survey buttons
+#'
+#' @description Gives functionality to creating the survey buttons server-side,
+#' helps parse through each survey columns requirement and render buttons
+#' according to user configuration. 
+#' Designed to take multiple input as 'comma-separated'
+#' 
+#' @export
+#' 
+#' @rdname survey_input_user
+#' 
+#' @param input the input variables from [shiny::callModule()]
+#' @param output the output variables from [shiny::callModule()]
+#' @param session the session from [shiny::callModule()]
+#' @param values the reactive values from server
+#' 
+#' @return the UI for survey inputs in ShinyApp
+#' 
+#' @example
+#' mod_render_image_ui(...)
+mod_survey_input_user_server <- function(input, output, session, survey_colnames, values){
   ns <- session$ns
   
-  config_path <- file.path("conf", golem::get_golem_options("annotator_config"))
-  survey_config <- config::get(file = config_path) %>% .$survey_opts
-  
-  #' change this  
-  status_vec <- purrr::map(
-    survey_config, function(x){
-    x$colname}) %>% 
-    purrr::reduce(., c)
-  
   #' change input
-  purrr::walk(status_vec, function(status){
-    observeEvent(input[[status]], {
-      if(is.null(input[[status]])){
-        values$userInput[[status]] <- ""
+  purrr::walk(survey_colnames, function(col){
+    observeEvent(input[[col]], {
+      if(is.null(input[[col]])){
+        values$userInput[[col]] <- ""
       }else{
-        values$userInput[[status]] <- glue::glue_collapse(
-          input[[status]], sep = ", ")
+        values$userInput[[col]] <- glue::glue_collapse(
+          input[[col]], sep = ", ")
       }
     }, ignoreNULL = FALSE)
   })
 }
-    
-## To be copied in the UI
-# mod_select_view_ui("select_view_ui_1")
-    
-## To be copied in the server
-# callModule(mod_select_view_server, "select_view_ui_1")
- 

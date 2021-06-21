@@ -23,10 +23,10 @@ app_ui <- function(request) {
                tabName = "annotator"))
   )
   body <- dashboardBody(
-    #' Add resoources in www
+    # Add resoources in www
     golem_add_external_resources(),
     
-    #' create tab items for UI
+    # create tab items for UI
     tabItems(
       tabItem(tabName = "about",
               h1("Welcome to the mHealth Annotator App!"),
@@ -40,7 +40,7 @@ app_ui <- function(request) {
               div("- After saving, we will fetch you more data into the session"),
       ),
       
-      #' annotator UI
+      # annotator UI
       tabItem(
         tabName = "annotator",
         fluidRow(
@@ -52,10 +52,10 @@ app_ui <- function(request) {
           br(),
           column(width = 7, 
                  align = "center",
-                 div(mod_render_image_ui("render_image_ui_1"))),
+                 div(mod_render_image_ui("render_image_ui"))),
           column(width = 4,
                  offset = 1,
-                 mod_survey_input_user_ui("ui_1"),
+                 mod_survey_input_user_ui("survey_input_ui"),
                  br(),
                  div(
                    style = "display:inline-block; float:left",
@@ -96,7 +96,7 @@ app_ui <- function(request) {
       )
     ),
     
-    #' instantiate waiter loading screen
+    # instantiate waiter loading screen
     waiter::use_waiter(),
     waiter::waiter_show_on_load(
       html = tagList(
@@ -107,7 +107,7 @@ app_ui <- function(request) {
     )
   )
   
-  #' consolidata header, sidebar and body
+  # consolidata header, sidebar and body
   dashboardPage(
     header,
     sidebar,

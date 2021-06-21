@@ -20,6 +20,11 @@ Imports:
     pkgload,
     tibble,
     magrittr,
+    dplyr,
+    shinyFeedback,
+    shinyWidgets,
+    purrr,
+    data.table
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

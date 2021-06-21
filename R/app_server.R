@@ -74,9 +74,9 @@ app_server <- function( input, output, session ) {
         syn$login(sessionToken = input$cookie, rememberMe = FALSE)
         
         # update data after updating session
-        values$currentAnnotator <- get_current_annotator(syn)
-        values$fileName <- get_output_filename(
-          filename = synapse_config$output_filename,
+        values$currentAnnotator <- syn$getUserProfile()$userName
+        values$fileName <-glue::glue(
+          "{annotator}_{filename}",filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
         # create user_directory
@@ -89,9 +89,21 @@ app_server <- function( input, output, session ) {
         values$outputLocation <- file.path(
           "user_dir", values$currentAnnotator, "processed_files")
         
-        # load all data and stored data from synapse
-        values <- load_data(
-          syn, synapse_config, survey_config, values)
+        #' get all data and previous data
+        values$allDf <- get_source_table(
+          syn = syn, 
+          filehandle_cols = synapse_config$filehandle_cols,
+          synapse_tbl_id = synapse_config$synapse_tbl_id)
+        
+        #' get previous image that has been curated
+        values$curatedDf <- get_stored_annotation(
+          syn = syn,
+          parent_id = synapse_config$output_parent_id,
+          stored_filename = values$fileName,
+          uid = synapse_config$uid,
+          keep_metadata = synapse_config$keep_metadata,
+          survey_colnames = survey_config$survey_colnames
+        )
         
         # check if user has annotated everything
         if(nrow(values$curatedDf) ==  nrow(values$allDf)){
@@ -106,11 +118,11 @@ app_server <- function( input, output, session ) {
         }
         
         # batch process filehandles
-        values$useDf <- batch_process_filehandles(
+        values$useDf <- batch_process_table_column_files(
           syn = syn,
           all_data = values$allDf,
           curated_data = values$curatedDf,
-          synapse_tbl = synapse_config$synapse_tbl,
+          synapse_tbl_id = synapse_config$synapse_tbl_id,
           filehandle_cols = synapse_config$filehandle_cols,
           uid = synapse_config$uid, 
           survey_colnames = survey_config$survey_colnames,
@@ -230,9 +242,11 @@ app_server <- function( input, output, session ) {
   # render survey prompt module
   ##############################################
   callModule(mod_survey_input_user_server, 
-             "ui_1", values = values)
+             "survey_input_ui", 
+             survey_colnames = survey_config$survey_colnames,
+             values = values)
   callModule(mod_render_image_server, 
-             "render_image_ui_1",
+             "render_image_ui",
              obj_path = values$useDf$imagePath[values$ii],
              input_width = image_config$width,
              input_height = image_config$height)
@@ -406,20 +420,32 @@ app_server <- function( input, output, session ) {
     # reset to 1
     values$ii <- 1
     
-    # reload data from synapse
-    values <- load_data(
-      syn, synapse_config, survey_config, values)
+    #' get all data and previous data
+    values$allDf <- get_source_table(
+      syn = syn, 
+      filehandle_cols = synapse_config$filehandle_cols,
+      synapse_tbl_id = synapse_config$synapse_tbl_id)
+    
+    #' get previous image that has been curated
+    values$curatedDf <- get_stored_annotation(
+      syn = syn,
+      parent_id = synapse_config$output_parent_id,
+      stored_filename = values$fileName,
+      uid = synapse_config$uid,
+      keep_metadata = synapse_config$keep_metadata,
+      survey_colnames = survey_config$survey_colnames
+    )
     
     # refresh if ran out of images
     if(nrow(values$allDf) == nrow(values$curatedDf)){
       shinyjs::refresh()
     }else{
       # batch process filehandles
-      values$useDf <- batch_process_filehandles(
+      values$useDf <- batch_process_table_column_files(
         syn = syn,
         all_data = values$allDf,
         curated_data = values$curatedDf,
-        synapse_tbl = synapse_config$synapse_tbl,
+        synapse_tbl_id = synapse_config$synapse_tbl_id,
         filehandle_cols = synapse_config$filehandle_cols,
         uid = synapse_config$uid, 
         survey_colnames = survey_config$survey_colnames,

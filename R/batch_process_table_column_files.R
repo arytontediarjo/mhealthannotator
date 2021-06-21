@@ -80,7 +80,7 @@ visualize_column_files <- function(data,
 }
 
 
-#' Process Synapse Table Fileshandles
+#' Process Synapse Table Column Files
 #' 
 #' Process Synapse Table Filehandles in batch processing,
 #' will take unannotated data and batch process each 
@@ -105,18 +105,19 @@ visualize_column_files <- function(data,
 #' @import tidyr
 #' @import glue
 #' 
-#' @return a dataframe containing processed filecolumns that will be used
-#' for rendering
+#' @return a dataframe containing processed 
+#' Table column files that will be used
+#' for rendering in the Shiny App
 #' 
 #' @export
 #' @examples 
-#' batch_process_filehandles(...)
-batch_process_filehandles <- function(syn, all_data, curated_data, 
-                                      synapse_tbl_id, filehandle_cols, 
-                                      uid, survey_colnames,
-                                      keep_metadata, n_batch, sort_keys,
-                                      output_location, cache_location,
-                                      visualization_funs){
+#' batch_process_table_column_files(...)
+batch_process_table_column_files <- function(syn, all_data, curated_data, 
+                                             synapse_tbl_id, filehandle_cols, 
+                                             uid, survey_colnames,
+                                             keep_metadata, n_batch, sort_keys,
+                                             output_location, cache_location,
+                                             visualization_funs){
   
   # check sorting
   if(is.null(sort_keys)){
