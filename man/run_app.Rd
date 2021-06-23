@@ -4,13 +4,12 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app(
-  annotator_config = "psorcast_plaque",
-  visual_funs = visualize_psorcast_photo
-)
+run_app(config, funs)
 }
 \arguments{
-\item{...}{A series of options to be used inside the app.}
+\item{config}{config file to run your shiny}
+
+\item{funs}{function to generate your images for the shiny app}
 }
 \description{
 Run the Shiny Application

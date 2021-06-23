@@ -110,8 +110,6 @@ visualize_column_files <- function(data,
 #' for rendering in the Shiny App
 #' 
 #' @export
-#' @examples 
-#' batch_process_table_column_files(...)
 batch_process_table_column_files <- function(syn, all_data, curated_data, 
                                              synapse_tbl_id, filehandle_cols, 
                                              uid, survey_colnames,

@@ -11,19 +11,13 @@
 #' @param session Shiny session
 #' @return none
 #' @export
-#' @examples
-#' \dontrun{
-#' shinyApp(ui = app_ui, server = app_server)
-#' }
 app_server <- function( input, output, session ) {
   
   # instantiate synapse
   syn <- synapseclient$Synapse()
   
   # read configuraiton file
-  config_path <- file.path(
-    "configs", 
-    golem::get_golem_options("config"))
+  config_path <- file.path(golem::get_golem_options("config"))
   config <- config::get(file = config_path)
   
   # parse all configuration type
@@ -167,8 +161,7 @@ app_server <- function( input, output, session ) {
       }, error = function(err) {
         # get error message
         Sys.sleep(2)
-        error_msg <- stringr::str_squish(
-          stringr::str_replace_all(geterrmessage(), "\n", ""))
+        error_msg <- stringr::str_squish(geterrmessage())
         
         # get error logs and save to log/*
         tmp <- file.path(

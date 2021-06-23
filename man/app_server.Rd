@@ -2,14 +2,20 @@
 % Please edit documentation in R/app_server.R
 \name{app_server}
 \alias{app_server}
-\title{The application server-side}
+\title{App Server}
 \usage{
 app_server(input, output, session)
 }
 \arguments{
-\item{input, output, session}{Internal parameters for {shiny}. 
-DO NOT REMOVE.}
+\item{input}{Shiny input}
+
+\item{output}{Shiny output}
+
+\item{session}{Shiny session}
+}
+\value{
+none
 }
 \description{
-The application server-side
+Create the server-side component of mhealthannotator app
 }
