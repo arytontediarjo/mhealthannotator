@@ -5,20 +5,35 @@
 \title{Get unannotated files in batch}
 \usage{
 get_unannotated_files_in_batch(
-  syn,
   data,
+  syn,
   synapse_tbl_id,
   filehandle_cols,
   uid,
   keep_metadata,
   n_batch,
-  output_location,
-  cache_location,
-  visualization_funs
+  cache_location
 )
 }
 \arguments{
 \item{data}{containing un-annotated data based on each user}
+
+\item{syn}{synapseclient}
+
+\item{synapse_tbl_id}{synapse source table id}
+
+\item{filehandle_cols}{filehandle column target to parse}
+
+\item{uid}{unique identifier of each files}
+
+\item{keep_metadata}{metadata to keep from the table}
+
+\item{n_batch}{number of batch per session}
+
+\item{cache_location}{where to find raw files}
+}
+\value{
+unannotated data based on previously stored records
 }
 \description{
 Helper function for downloading a number of Synapse table-attached 

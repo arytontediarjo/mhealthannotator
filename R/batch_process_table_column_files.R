@@ -1,8 +1,7 @@
-#' Get Table Unique Identifier String Filter
+#' @title Get Table Unique Identifier String Filter
 #' 
-#' This is a helper function to build string filter (SQL-like)
+#' @description This is a helper function to build string filter (SQL-like)
 #' for filtering Synapse Table before downloading files 
-#' 
 #' Note: This is done to enable small-batch download
 #' 
 #' @param uid unique identifier used to 
@@ -16,13 +15,14 @@ get_table_string_filters <- function(uid){
 }
 
 
-#' Get unannotated files in batch
+#' @title Get unannotated files in batch
 #' 
-#' Helper function for downloading a number of Synapse table-attached 
+#' @description Helper function for downloading a number of Synapse table-attached 
 #' files according to input batch, and process using desired function
 #' 
 #' @param data containing un-annotated data based on each user
-#' @inheritParams batch_process_filehandles
+#' @inheritParams batch_process_table_column_files
+#' @return unannotated data based on previously stored records
 get_unannotated_files_in_batch <- function(data, 
                                            syn,
                                            synapse_tbl_id, 
@@ -67,7 +67,7 @@ get_unannotated_files_in_batch <- function(data,
 #' based on a custom function 
 #' 
 #' @param data data where it contains cached `filePath` of the table attached files
-#' @param visualization_funs custom visualization function
+#' @param funs custom visualization function
 #' @param output_location where to output the processed files location
 #' 
 #' @return a dataframe containing processed files
@@ -101,6 +101,8 @@ visualize_column_files <- function(data, funs, output_location){
 #' @param output_location where to store processed files
 #' @param cache_location where to find raw files
 #' @param visualization_funs function to visualize data
+#' @param survey_colnames the column for storing survey input
+#' @param sort_keys sorting keys
 #' 
 #' @import tibble
 #' @import magrittr
@@ -114,12 +116,18 @@ visualize_column_files <- function(data, funs, output_location){
 #' for rendering in the Shiny App
 #' 
 #' @export
-batch_process_table_column_files <- function(syn, all_data, curated_data, 
-                                             synapse_tbl_id, filehandle_cols, 
+batch_process_table_column_files <- function(syn, 
+                                             all_data, 
+                                             curated_data, 
+                                             synapse_tbl_id, 
+                                             filehandle_cols, 
                                              uid, survey_colnames,
-                                             keep_metadata, n_batch, sort_keys,
-                                             output_location, cache_location,
-                                             visualization_funs){
+                                             keep_metadata, 
+                                             n_batch,
+                                             output_location, 
+                                             cache_location,
+                                             visualization_funs,
+                                             sort_keys = NULL){
   
   # check sorting
   if(is.null(sort_keys)){
@@ -141,13 +149,12 @@ batch_process_table_column_files <- function(syn, all_data, curated_data,
       filehandle_cols = filehandle_cols,
       keep_metadata = keep_metadata,
       n_batch = n_batch,
-      cache_location = file.path(
-        here::here(), cache_location)) %>% 
+      cache_location = cache_location) %>% 
     
     # visualize data
-    visualize_column_files(funs = visualization_funs,
-                           output_location = file.path(
-                             here::here(), output_location)) %>%
+    visualize_column_files(
+      funs = visualization_funs,
+      output_location = output_location) %>%
     
     # clean data by converting all to character
     # drop NA, add survey columns, and several other

@@ -15,8 +15,6 @@ be included in the batch with parentheses
 }
 \description{
 This is a helper function to build string filter (SQL-like)
-for filtering Synapse Table before downloading files
-}
-\details{
+for filtering Synapse Table before downloading files 
 Note: This is done to enable small-batch download
 }

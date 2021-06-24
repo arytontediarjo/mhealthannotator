@@ -8,9 +8,9 @@ storing image files (to not overpopulate Shiny Server)}
 clear_directory(user_dir, annotator)
 }
 \arguments{
-\item{user_dir_parent}{directory of the current annotator}
+\item{user_dir}{parent directory of the current annotator}
 
-\item{curr_annotator}{user name of the annotator}
+\item{annotator}{user name of the annotator}
 }
 \value{
 

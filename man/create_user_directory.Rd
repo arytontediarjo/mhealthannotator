@@ -13,6 +13,7 @@ create_user_directory(user_dir_parent, curr_annotator)
 \item{curr_annotator}{user name of the annotator}
 }
 \value{
+character user directory
 create user directory
 }
 \description{

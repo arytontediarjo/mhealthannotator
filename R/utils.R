@@ -56,10 +56,10 @@ parse_image_opts <- function(config){
 #' storing image files (to not overpopulate Shiny Server)
 #' @param user_dir_parent parent directory of the current annotator
 #' @param curr_annotator user name of the annotator
-#' @return 
+#' @return character user directory
 create_user_directory <- function(user_dir_parent, curr_annotator){
     #' create user directory
-    dir.create(user_dir_parent) 
+    dir.create(user_dir_parent, showWarnings = FALSE) 
     user_dir <- file.path(user_dir_parent, curr_annotator)
     dir.create(file.path(user_dir), showWarnings = FALSE) 
     dir.create(file.path(user_dir, "downloaded_files"), showWarnings = FALSE)
@@ -69,8 +69,8 @@ create_user_directory <- function(user_dir_parent, curr_annotator){
 
 #' Function to clear user directory
 #' storing image files (to not overpopulate Shiny Server)
-#' @param user_dir_parent directory of the current annotator
-#' @param curr_annotator user name of the annotator
+#' @param user_dir parent directory of the current annotator
+#' @param annotator user name of the annotator
 #' @return 
 clear_directory <- function(user_dir, annotator){
     unlink(glue::glue(

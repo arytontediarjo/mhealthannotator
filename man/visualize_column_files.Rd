@@ -4,12 +4,12 @@
 \alias{visualize_column_files}
 \title{Visualize Synapse Table Column Files}
 \usage{
-visualize_column_files(data, visualization_funs, output_location)
+visualize_column_files(data, funs, output_location)
 }
 \arguments{
 \item{data}{data where it contains cached `filePath` of the table attached files}
 
-\item{visualization_funs}{custom visualization function}
+\item{funs}{custom visualization function}
 
 \item{output_location}{where to output the processed files location}
 }

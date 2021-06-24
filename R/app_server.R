@@ -73,16 +73,18 @@ app_server <- function( input, output, session ) {
           "{annotator}_{filename}",filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
-        # create user_directory and log directory
-        dir.create(here::here(), "log")
-        clear_directory("user_dir", values$currentAnnotator)
-        create_user_directory("user_dir", values$currentAnnotator)
+        # create log directory
+        dir.create("log", showWarnings = FALSE)
+        
+        # create user directory
+        clear_directory("dir", values$currentAnnotator)
+        create_user_directory("dir", values$currentAnnotator)
         
         # set cache and output location based on user
         values$cacheLocation <- file.path(
-          "user_dir", values$currentAnnotator, "downloaded_files")
+          "dir", values$currentAnnotator, "downloaded_files")
         values$outputLocation <- file.path(
-          "user_dir", values$currentAnnotator, "processed_files")
+          "dir", values$currentAnnotator, "processed_files")
         
         #' get all data and previous data
         values$allDf <- get_source_table(
@@ -105,7 +107,7 @@ app_server <- function( input, output, session ) {
           waiter_update(
             html = tagList(
               img(src = "www/synapse_logo.png", height = "120px"),
-              h2("You’ve gotten through all the images, great work!"),
+              h2("You have gotten through all the images, great work!"),
               h3("Come again next time!")
             )
           )
@@ -164,7 +166,7 @@ app_server <- function( input, output, session ) {
         Sys.sleep(2)
         error_msg <- stringr::str_squish(geterrmessage())
         
-        # get error logs and save to log/*
+        # get error logs and save to logs
         tmp <- file.path(
           "log",
           glue::glue(

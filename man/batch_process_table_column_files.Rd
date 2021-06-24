@@ -14,10 +14,10 @@ batch_process_table_column_files(
   survey_colnames,
   keep_metadata,
   n_batch,
-  sort_keys,
   output_location,
   cache_location,
-  visualization_funs
+  visualization_funs,
+  sort_keys = NULL
 )
 }
 \arguments{
@@ -33,6 +33,8 @@ batch_process_table_column_files(
 
 \item{uid}{unique identifier of each files}
 
+\item{survey_colnames}{the column for storing survey input}
+
 \item{keep_metadata}{metadata to keep from the table}
 
 \item{n_batch}{number of batch per session}
@@ -42,6 +44,8 @@ batch_process_table_column_files(
 \item{cache_location}{where to find raw files}
 
 \item{visualization_funs}{function to visualize data}
+
+\item{sort_keys}{sorting keys}
 }
 \value{
 a dataframe containing processed 

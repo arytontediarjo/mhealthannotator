@@ -92,6 +92,7 @@ mod_survey_input_user_ui <- function(id){
 #' @param output the output variables from [shiny::callModule()]
 #' @param session the session from [shiny::callModule()]
 #' @param values the reactive values from server
+#' @param survey_colnames the column used to store survey
 #' 
 #' @return the UI for survey inputs in ShinyApp
 mod_survey_input_user_server <- function(input, output, session, survey_colnames, values){
