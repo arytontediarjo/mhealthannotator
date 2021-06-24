@@ -14,7 +14,7 @@ Notes on Installation:
 All functionalities in mhealthannotator use reticulate and the [Synapse Python
 client](https://pypi.org/project/synapseclient/). You can set up your environment by having a anaconda environment or a virtual environment set up with Synapseclient. Because mhealthannotator uses reticulate, it is not compatible with the [synapser](https://r-docs.synapse.org/) package..
 
-Adding Python using R `renv` package (Suggested):
+### Adding Python using R `renv` package (Suggested):
 ```r
 install.packages("renv")
 renv::use_python(<your python environment based on `requirements.txt`>)
