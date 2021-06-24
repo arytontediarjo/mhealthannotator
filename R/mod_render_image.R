@@ -9,9 +9,6 @@
 #' @param id the id
 #'
 #' @return UI for the image rendering for the dashboard
-#' 
-#' @example
-#' mod_render_image_ui(...)
 mod_render_image_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -36,9 +33,6 @@ mod_render_image_ui <- function(id){
 #' @param input_height image height
 #'
 #' @return
-#' 
-#' @example
-#' mod_render_image_ui(...)
 mod_render_image_server <- function(input, output, 
                                     session, obj_path,
                                     input_width = 650,

@@ -73,7 +73,8 @@ app_server <- function( input, output, session ) {
           "{annotator}_{filename}",filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
-        # create user_directory
+        # create user_directory and log directory
+        dir.create(here::here(), "log")
         clear_directory("user_dir", values$currentAnnotator)
         create_user_directory("user_dir", values$currentAnnotator)
         

@@ -23,11 +23,14 @@ get_table_string_filters <- function(uid){
 #' 
 #' @param data containing un-annotated data based on each user
 #' @inheritParams batch_process_filehandles
-get_unannotated_files_in_batch <- function(syn, data, synapse_tbl_id, 
-                                           filehandle_cols, uid, 
+get_unannotated_files_in_batch <- function(data, 
+                                           syn,
+                                           synapse_tbl_id, 
+                                           filehandle_cols, 
+                                           uid, 
                                            keep_metadata, 
-                                           n_batch, output_location, 
-                                           cache_location, visualization_funs){
+                                           n_batch,
+                                           cache_location){
   
   # set cache location
   syn$cache$cache_root_dir <- cache_location
@@ -44,7 +47,7 @@ get_unannotated_files_in_batch <- function(syn, data, synapse_tbl_id,
       "SELECT * FROM {synapse_tbl_id} WHERE recordId IN {get_subset}"))
   
   # download all table columns
-  result <- syn$downloadTableColumns(
+  syn$downloadTableColumns(
     table = entity, 
     columns = filehandle_cols) %>%
     tibble::enframe(.) %>%
@@ -68,15 +71,16 @@ get_unannotated_files_in_batch <- function(syn, data, synapse_tbl_id,
 #' @param output_location where to output the processed files location
 #' 
 #' @return a dataframe containing processed files
-visualize_column_files <- function(data, 
-                                   visualization_funs, 
-                                   output_location){
-  data %>% 
+visualize_column_files <- function(data, funs, output_location){
+  data %>%  
     dplyr::mutate(
-    imagePath = purrr::map_chr(
-      .x = filePath, 
-      output_location = output_location,
-      .f = visualization_funs))
+      basePath = purrr::map_chr(
+        filePath, function(x){
+          file.copy(x, output_location)
+          return(basename(x))}),
+      imagePath = purrr::map_chr(
+        file.path(output_location,
+                  basePath), .f = funs)) 
 }
 
 
@@ -137,14 +141,13 @@ batch_process_table_column_files <- function(syn, all_data, curated_data,
       filehandle_cols = filehandle_cols,
       keep_metadata = keep_metadata,
       n_batch = n_batch,
-      output_location = output_location,
-      cache_location = cache_location) %>% 
+      cache_location = file.path(
+        here::here(), cache_location)) %>% 
     
     # visualize data
-    visualize_column_files(
-      data = .,
-      visualization_funs = visualization_funs,
-      output_location = output_location) %>%
+    visualize_column_files(funs = visualization_funs,
+                           output_location = file.path(
+                             here::here(), output_location)) %>%
     
     # clean data by converting all to character
     # drop NA, add survey columns, and several other

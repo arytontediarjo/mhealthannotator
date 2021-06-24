@@ -1,6 +1,4 @@
-parse_picture_to_jpeg <- function(filepath, output_location){
-    file.copy(filepath, output_location)
-    filepath <- file.path(output_location, basename(filepath))
+visualize_photo <- function(filepath){
     if(tools::file_ext(filepath) == "png"){
         new_filepath <- sub('\\.png$', '.jpg', filepath)
         png_mat <- png::readPNG(filepath)
@@ -10,8 +8,4 @@ parse_picture_to_jpeg <- function(filepath, output_location){
     }else{
         return(filepath)
     }
-}
-
-visualize_photo <- function(filepath, output_location){
-    parse_picture_to_jpeg(filepath, output_location)
 }

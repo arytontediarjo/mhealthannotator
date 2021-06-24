@@ -6,16 +6,13 @@
 #' 
 #' @export
 #' 
-#' @rdname survey_input_user
+#' @rdname survey_input_user_ui
 #' 
 #' @import shinyWidgets
 #' 
 #' @param id the id
 #'
 #' @return the UI for survey inputs in ShinyApp
-#' 
-#' @example
-#' mod_render_image_ui(...)
 mod_survey_input_user_ui <- function(id){
   ns <- NS(id)
   
@@ -89,7 +86,7 @@ mod_survey_input_user_ui <- function(id){
 #' 
 #' @export
 #' 
-#' @rdname survey_input_user
+#' @rdname survey_input_user_server
 #' 
 #' @param input the input variables from [shiny::callModule()]
 #' @param output the output variables from [shiny::callModule()]
@@ -97,9 +94,6 @@ mod_survey_input_user_ui <- function(id){
 #' @param values the reactive values from server
 #' 
 #' @return the UI for survey inputs in ShinyApp
-#' 
-#' @example
-#' mod_render_image_ui(...)
 mod_survey_input_user_server <- function(input, output, session, survey_colnames, values){
   ns <- session$ns
   
