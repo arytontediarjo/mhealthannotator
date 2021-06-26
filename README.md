@@ -14,12 +14,7 @@ Notes on Installation:
 All functionalities in mhealthannotator use reticulate and the [Synapse Python
 client](https://pypi.org/project/synapseclient/). You can set up your environment by having a anaconda environment or a virtual environment set up with Synapseclient. Because mhealthannotator uses reticulate, it is not compatible with the [synapser](https://r-docs.synapse.org/) package..
 
-### Adding Python using R `renv` package (Suggested):
-```r
-install.packages("renv")
-renv::use_python(<your python environment based on `requirements.txt`>)
-```
 ### Running your Shiny App
 ```r
-mhealthannotator::run_app(config = "config/psorcast_plaque_config.yml", funs = visualize_photo)
+mhealthannotator::run_app(config = <PATH_TO_CONFIG>, funs = <FUNCTION>)
 ```
