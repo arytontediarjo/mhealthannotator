@@ -5,15 +5,10 @@
 \title{Function to clear user directory
 storing image files (to not overpopulate Shiny Server)}
 \usage{
-clear_directory(user_dir, annotator)
+clear_directory(curr_annotator)
 }
 \arguments{
-\item{user_dir}{parent directory of the current annotator}
-
-\item{annotator}{user name of the annotator}
-}
-\value{
-
+\item{curr_annotator}{user name of the annotator}
 }
 \description{
 Function to clear user directory

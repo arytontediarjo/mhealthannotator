@@ -5,16 +5,11 @@
 \title{Function to create user directory for temporarily
 storing image files (to not overpopulate Shiny Server)}
 \usage{
-create_user_directory(user_dir_parent, curr_annotator)
+create_user_directory(curr_annotator)
 }
 \arguments{
-\item{user_dir_parent}{parent directory of the current annotator}
-
-\item{curr_annotator}{user name of the annotator}
-}
-\value{
-character user directory
-create user directory
+\item{curr_annotator}{user name of the annotator
+create user directory}
 }
 \description{
 Function to create user directory for temporarily

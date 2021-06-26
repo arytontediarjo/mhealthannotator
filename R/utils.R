@@ -54,30 +54,30 @@ parse_image_opts <- function(config){
 
 #' Function to create user directory for temporarily
 #' storing image files (to not overpopulate Shiny Server)
-#' @param user_dir_parent parent directory of the current annotator
 #' @param curr_annotator user name of the annotator
-#' @return character user directory
-create_user_directory <- function(user_dir_parent, curr_annotator){
+create_user_directory <- function(curr_annotator){
     #' create user directory
-    dir.create(user_dir_parent, showWarnings = FALSE) 
-    user_dir <- file.path(user_dir_parent, curr_annotator)
-    dir.create(file.path(user_dir), showWarnings = FALSE) 
-    dir.create(file.path(user_dir, "downloaded_files"), showWarnings = FALSE)
-    dir.create(file.path(user_dir, "processed_files"), showWarnings = FALSE)
-    return(user_dir)
+    user_dir <- file.path(
+        "dir", curr_annotator)
+    dir.create(
+        user_dir, showWarnings = FALSE) 
+    dir.create(
+        file.path(user_dir, "downloaded_files"), 
+        showWarnings = FALSE)
+    dir.create(
+        file.path(user_dir, "processed_files"), 
+        showWarnings = FALSE)
 }
 
 #' Function to clear user directory
 #' storing image files (to not overpopulate Shiny Server)
-#' @param user_dir parent directory of the current annotator
-#' @param annotator user name of the annotator
-#' @return 
-clear_directory <- function(user_dir, annotator){
+#' @param curr_annotator user name of the annotator
+clear_directory <- function(curr_annotator){
     unlink(glue::glue(
-        "{user_dir}/{annotator}/downloaded_files/*"), 
+        "dir/{curr_annotator}"), 
         recursive = T, force = T)
     unlink(glue::glue(
-        "{user_dir}/{annotator}/processed_files/*"), 
+        "dir/{curr_annotator}"), 
         recursive = T, force = T)
 }
 

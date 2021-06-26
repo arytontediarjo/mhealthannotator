@@ -75,12 +75,12 @@ visualize_column_files <- function(data, funs, output_location){
   data %>%  
     dplyr::mutate(
       basePath = purrr::map_chr(
-        filePath, function(x){
-          file.copy(x, output_location)
-          return(basename(x))}),
-      imagePath = purrr::map_chr(
-        file.path(output_location,
-                  basePath), .f = funs)) 
+        filePath, function(fp){
+          file.copy(fp, output_location)
+          return(basename(fp))}),
+      imagePath = file.path(output_location, basePath),
+      imagePath = purrr::map_chr(temp_imagePath, .f = funs))
+  purrr::walk(data$temp_imagePath, ~unlink(.x))
 }
 
 

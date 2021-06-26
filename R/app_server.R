@@ -75,10 +75,11 @@ app_server <- function( input, output, session ) {
         
         # create log directory
         dir.create("log", showWarnings = FALSE)
+        dir.create("dir", showWarnings = FALSE) 
         
         # create user directory
-        clear_directory("dir", values$currentAnnotator)
-        create_user_directory("dir", values$currentAnnotator)
+        clear_directory(values$currentAnnotator)
+        create_user_directory(values$currentAnnotator)
         
         # set cache and output location based on user
         values$cacheLocation <- file.path(
