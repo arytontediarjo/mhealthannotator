@@ -3,6 +3,10 @@
 #' @description this function is used to visualize a 
 #' filepath for gait data in Synapse table
 #' 
+#' @import ggplot2
+#' @import patchwork
+#' @importFrom magrittr "%>%"
+#' 
 #' @param filepath the corresponding filepath being used
 #' 
 #' @return the output for the visualization
@@ -95,6 +99,7 @@ visualize_mpower_gait <- function(filepath){
             device = "jpeg", 
             width = 10, 
             height = 6)
+        return(output_filename)
     }, error = function(e){
         print(e)
         return(as.character(NA))
