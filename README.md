@@ -43,6 +43,9 @@ mhealthannotator::run_app(config = <PATH_TO_CONFIG_FILE>, funs = <PLOT_FUNCTION>
 [Resources to connect to Sage SciComp Shiny Server Instance](https://sagebionetworks.jira.com/wiki/spaces/SageShinyServer/pages/75497489/Shiny+Server)
 
 1. Git Clone this Repo on your server directory
+```zsh
+git clone https://github.com/Sage-Bionetworks/mhealthannotator.git
+```
 2. Repeat Step 1 and 2 of `How to Run`
 3. Modify app.R based on your parameter of Step 3 of `How to Run`
 
