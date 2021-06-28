@@ -1,14 +1,6 @@
-# Set options here
-options(golem.app.prod = TRUE) # TRUE = production mode, FALSE = development mode
-
-# Detach all loaded packages and clean your environment
-golem::detach_all_attached()
-# rm(list=ls(all.names = TRUE))
-
-# Document and reload your package
-golem::document_and_reload()
-
-# Run the application
-mhealthannotator::run_app(
-    annotator_config = "conf/mpower_gait_config.yml",
-    visual_funs = visualize_mpower_gait)
+# Launch the ShinyApp (Do not remove this comment)
+# To deploy, run: rsconnect::deployApp()
+# Or use the blue button on top of this file
+pkgload::load_all()
+options("golem.app.prod" = TRUE)
+mhealthannotator::run_app() # add parameters here (if any)

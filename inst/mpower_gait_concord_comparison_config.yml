@@ -1,18 +1,22 @@
 default:
     synapse_opts:
         synID:
-            parent_output: "syn24986703"
-            tbl: "syn12514611" 
-        output_filename: "annotator_test.tsv"
+            parent_output: "syn25672221"
+            tbl: "syn25688489" 
+        output_filename: "AnnotatedGaitSensor_concord_comparison.tsv"
         column_target:
             - "walk_motion.json"
         unique_identifier: 
             - "recordId"
-        n_batch: 5
+        n_batch: 50
         keep_metadata:
             - "healthCode"
             - "createdOn"
             - "phoneInfo"
+            - "diagnosis"
+            - "walk_status_Larsson"
+            - "walk_status_Aryton"
+            - "walk_status_Elias"
         sort_keys:
             - "recordId"
     survey_opts:

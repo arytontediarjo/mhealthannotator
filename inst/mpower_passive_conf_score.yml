@@ -1,20 +1,22 @@
 default:
     synapse_opts:
         synID:
-            parent_output: "syn24986703"
-            tbl: "syn12514611" 
-        output_filename: "annotator_test.tsv"
+            parent_output: "syn25280849"
+            tbl: "syn25808431" 
+        output_filename: "annotated_passive_gait_conf_score.tsv"
         column_target:
             - "walk_motion.json"
         unique_identifier: 
             - "recordId"
-        n_batch: 5
+        n_batch: 50
         keep_metadata:
             - "healthCode"
             - "createdOn"
             - "phoneInfo"
+            - "diagnosis"
+            - "walking_conf_score"
         sort_keys:
-            - "recordId"
+            - "walking_conf_score"
     survey_opts:
         survey_1:
             colname: "walk_status"
