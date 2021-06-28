@@ -79,8 +79,7 @@ visualize_column_files <- function(data, funs, output_location){
           file.copy(fp, output_location)
           return(basename(fp))}),
       imagePath = file.path(output_location, basePath),
-      imagePath = purrr::map_chr(temp_imagePath, .f = funs))
-  purrr::walk(data$temp_imagePath, ~unlink(.x))
+      imagePath = purrr::map_chr(imagePath, .f = funs))
 }
 
 

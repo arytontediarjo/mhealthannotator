@@ -10,5 +10,5 @@ golem::document_and_reload()
 
 # Run the application
 run_app(
-    annotator_config = "conf/mpower_gait_concord_comparison_config.yml",
-    visual_funs = visualize_mpower_gait)
+    config = "inst/mpower_gait_config.yml",
+    funs = visualize_mpower_gait)
