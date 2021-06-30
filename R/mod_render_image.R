@@ -35,8 +35,17 @@ mod_render_image_ui <- function(id){
 #' @return
 mod_render_image_server <- function(input, output, 
                                     session, obj_path,
-                                    input_width = 650,
-                                    input_height = 450){
+                                    input_width = NULL,
+                                    input_height = NULL){
+  
+  if(is.null(input_width)){
+    input_width = "auto"
+  }
+  
+  if(is.null(input_height)){
+    input_height = "100%"
+  }
+  
   ns <- session$ns
   output$image <- renderImage({
     # set dynamic sizing
@@ -47,7 +56,7 @@ mod_render_image_server <- function(input, output,
     jpeg(outfile, res = 150*pixelratio)
     dev.off()
     list(src = obj_path,
-         height = "100%",
-         width  = "auto")
+         height = input_height,
+         width  = input_width)
   }, deleteFile=FALSE)
 }
