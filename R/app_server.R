@@ -380,8 +380,9 @@ app_server <- function( input, output, session ) {
     # reset post confirmation
     values$postConfirm <- FALSE
     
-    # clear directory
-    clear_directory("user_dir", values$currentAnnotator)
+    # clear directory & create user directory
+    clear_directory(values$currentAnnotator)
+    create_user_directory(values$currentAnnotator)
     
     # show modal spinner
     shinybusy::show_modal_spinner(

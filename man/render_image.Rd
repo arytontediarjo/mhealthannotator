@@ -12,8 +12,8 @@ mod_render_image_server(
   output,
   session,
   obj_path,
-  input_width = 650,
-  input_height = 450
+  input_width = NULL,
+  input_height = NULL
 )
 }
 \arguments{

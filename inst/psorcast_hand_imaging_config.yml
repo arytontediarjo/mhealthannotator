@@ -10,40 +10,33 @@ default:
             - "recordId"
         n_batch: 3
         keep_metadata:
-            - "participantID"
+            - "participantId"
             - "createdOn"
     survey_opts:
         survey_1:
-            colname: "left_hand_nail_psoriasis"
+            colname: "left_nail_psoriasis"
             type: "checkbox_group"
             prompt: "Select Left-Hand Nail Psoriasis:"
             selected: "None"
             input_choices:
-                None: "None"
-                L1: "L1"
-                L2: "L2"
-                L3: "L3"
-                L4: "L4"
-                L5: "L5"
+                - "None"
+                - "L1"
+                - "L2"
+                - "L3"
+                - "L4"
+                - "L5"
         survey_2:
-            colname: "right_hand_nail_psoriasis"
+            colname: "right_nail_psoriasis"
             type: "checkbox_group"
             prompt: "Select Right-Hand Nail Psoriasis:"
             selected: "None"
             input_choices:
-                None: "None"
-                R1: "R1"
-                R2: "R2"
-                R3: "R3"
-                R4: "R4"
-                R5: "R5"
-        survey_3:
-                colname: "is_valid"
-                type: "radio"
-                prompt: "(Optional) I am not able to rate this image (e.g. nail polish, out of focus)"
-                input_choices:
-                    - "Yes"
-                    - "No"
+                - "None"
+                - "R1"
+                - "R2"
+                - "R3"
+                - "R4"
+                - "R5"
     image_opts: 
-        width: "700px"
-        height: "450px"
+        width: "95%"
+        height: "95%"
