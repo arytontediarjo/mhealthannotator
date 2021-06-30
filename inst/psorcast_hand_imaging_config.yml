@@ -8,7 +8,7 @@ default:
             - "summaryImage.jpg"
         unique_identifier: 
             - "recordId"
-        n_batch: 3
+        n_batch: 50
         keep_metadata:
             - "participantId"
             - "createdOn"
