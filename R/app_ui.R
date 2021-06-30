@@ -81,17 +81,10 @@ app_ui <- function(request) {
           conditionalPanel(
             'input.dataset === "metadata-table"',
           ),
-          conditionalPanel(
-            'input.dataset === "additional-table"',
-          ),
-
           tabsetPanel(id = 'dataset',
                       tabPanel(
-                        "metadata-table", 
-                        DT::dataTableOutput("metadata_table")),
-                      tabPanel(
-                        "additional-table", 
-                        DT::dataTableOutput("additional_table")))
+                        "metadata", 
+                        DT::dataTableOutput("metadata_table")))
         )
       )
     ),
