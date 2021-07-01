@@ -1,3 +1,15 @@
+#' function to parse initial selection
+#' place null if user is not giving any input
+#' @param input user input
+parse_initial_selection <- function(input){
+    if(is.null(input)){
+        character(0)
+    }else{
+        input
+    }
+}
+
+
 #' Function to parse selection (single/multiple)
 #' @param row_input input from user
 #' @param selected previously selected

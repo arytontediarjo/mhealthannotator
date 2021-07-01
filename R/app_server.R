@@ -17,13 +17,18 @@ app_server <- function( input, output, session ) {
   syn <- synapseclient$Synapse()
   
   # read configuraiton file
-  config_path <- file.path(golem::get_golem_options("config"))
+  config_path <- 
+    file.path(golem::get_golem_options("config"))
   config <- config::get(file = config_path)
   
+  #' check config
+  check_survey_config(config$survey_opts)
+  check_synapse_config(config$synapse_opts)
+  
   # parse all configuration type
-  synapse_config <- config %>% parse_synapse_opts()
-  survey_config <- config %>% parse_survey_opts()
-  image_config <- config %>% parse_image_opts()
+  synapse_config <- config$synapse_opts
+  survey_config <- parse_survey_opts(config$survey_opts)
+  image_config <- config$image_opts
   visualization_funs <-  golem::get_golem_options("funs")
   
   
@@ -78,7 +83,7 @@ app_server <- function( input, output, session ) {
         dir.create("dir", showWarnings = FALSE) 
         
         # create user directory
-        clear_directory(values$currentAnnotator)
+        clear_user_directory(values$currentAnnotator)
         create_user_directory(values$currentAnnotator)
         
         # set cache and output location based on user
@@ -381,7 +386,7 @@ app_server <- function( input, output, session ) {
     values$postConfirm <- FALSE
     
     # clear directory & create user directory
-    clear_directory(values$currentAnnotator)
+    clear_user_directory(values$currentAnnotator)
     create_user_directory(values$currentAnnotator)
     
     # show modal spinner

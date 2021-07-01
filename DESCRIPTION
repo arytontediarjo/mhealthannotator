@@ -45,3 +45,4 @@ Suggests:
 SystemRequirements: synapseclient (pypi.org/project/synapseclient)
 URL: https://github.com/Sage-Bionetworks/mhealthannotator
 BugReports: https://github.com/Sage-Bionetworks/mhealthannotator/issues
+Config/testthat/edition: 3

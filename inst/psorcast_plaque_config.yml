@@ -1,15 +1,17 @@
 default:
     synapse_opts:
-        synID:
-            parent_output: "syn25614357"
-            tbl: "syn22281748" 
-        output_filename: "psoriasis_plaque_annotations.tsv"
-        column_targets:
+        output_parent_id: 
+            - "syn25614357"
+        synapse_tbl_id: 
+            - "syn22281748" 
+        output_filename: 
+            - "psoriasis_plaque_annotations.tsv"
+        filehandle_cols:
             - "psoriasisAreaPhoto.jpg"
             - "psoriasisAreaPhoto.png"
-        unique_identifier: 
+        uid: 
             - "recordId" # unique identifier for that file in synapse table
-        n_batch: 5
+        n_batch: a
         keep_metadata:
             - "participantId"
             - "createdOn"
@@ -58,6 +60,6 @@ default:
                 3: 3
                 4: 4
                 Can't Tell: "Can't Tell"
-    image_opts: 
-        width: "625px"
-        height: "425px"
+    image_opts:
+        width:
+        height:
