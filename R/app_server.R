@@ -29,7 +29,7 @@ app_server <- function( input, output, session ) {
   synapse_config <- config$synapse_opts
   survey_config <- parse_survey_opts(config$survey_opts)
   image_config <- config$image_opts
-  visualization_funs <-  config$funs
+  visualization_funs <- golem::get_golem_options("funs")
   
   
   # define reactive values

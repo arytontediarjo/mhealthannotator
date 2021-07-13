@@ -9,7 +9,6 @@
 #' 
 #' @return a dataframe containing processed files
 visualize_column_files <- function(data, funs, output_location){
-    funs <- eval(parse(text = funs))
     data %>%  
         dplyr::mutate(
             basePath = purrr::map_chr(
