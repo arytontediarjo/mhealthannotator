@@ -10,7 +10,7 @@ visualize_mpower_gait(filepath)
 \item{filepath}{the corresponding filepath being used}
 }
 \value{
-the output for the visualization
+the output filepath for the visualization
 }
 \description{
 this function is used to visualize a 
