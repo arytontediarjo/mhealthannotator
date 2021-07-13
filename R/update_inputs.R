@@ -47,7 +47,7 @@ parse_slider_value <- function(row_input, selected){
 #' @param curr_index access current index
 #' @param config access annotator config file
 #' @return
-update_buttons <- function(reactive_values,
+update_inputs <- function(reactive_values,
                            session, 
                            curr_index,
                            config){

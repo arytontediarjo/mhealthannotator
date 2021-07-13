@@ -30,7 +30,7 @@ check_synapse_config <- function(config){
 check_survey_config <- function(config){
     available_button_types <- c("radio", 
                                 "slider",
-                                "checkbox-group")
+                                "checkbox_group")
     button_all_available <- config %>% 
         purrr::map(~.x$type) %>% 
         purrr::reduce(c) %in% 

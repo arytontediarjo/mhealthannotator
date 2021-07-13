@@ -9,14 +9,11 @@
 #' @param output_filename name of the data output
 #' @param ... additional info, will be used for provenance
 #' @return 
-store_tbl_to_synapse <- function(syn, 
-                                 synapseclient,
-                                 parent_id,
-                                 new_data, 
-                                 stored_data, 
-                                 current_annotator,
-                                 output_filename,
-                                 ...){
+store_to_synapse <- function(syn, 
+                             synapseclient, parent_id,
+                             new_data, stored_data, 
+                             current_annotator,
+                             output_filename, ...){
     new_data %>% 
         dplyr::select(-any_of(c("filePath", "imagePath"))) %>%
         dplyr::mutate(annotator = current_annotator) %>%

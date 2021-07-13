@@ -3,19 +3,17 @@
 #' @param data data of annotations
 #' @param curr_index current index marker
 #' @param user_inputs input given by users
-#' @param survey_colnames columns used for the surveys
 #' @param keep_metadata what metadata to keep
 #' @param uid what are the unique ids (recordId, healthcode, participantId etc.)
 #'
 #' @export
 #'
 #' @return dataframe of annotation based on current index
-survey_input_store <- function(data, 
-                               curr_index,
-                               user_inputs,
-                               survey_colnames,
-                               keep_metadata,
-                               uid){
+store_inputs <- function(data, 
+                         curr_index,
+                         user_inputs, 
+                         keep_metadata, 
+                         uid){
   tryCatch({
     curr_uid <- data[[uid]][curr_index]
     curr_fileColumnName <- data$fileColumnName[curr_index]
@@ -31,7 +29,7 @@ survey_input_store <- function(data,
       dplyr::rows_update(user_input_data, by = c(uid, "fileColumnName")) %>%
       dplyr::select(all_of(uid), 
                     all_of(keep_metadata), 
-                    all_of(survey_colnames),
+                    all_of(names(user_inputs)),
                     fileColumnName, 
                     imagePath, 
                     annotationTimestamp)

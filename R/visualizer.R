@@ -9,7 +9,7 @@
 #' 
 #' @param filepath the corresponding filepath being used
 #' 
-#' @return the output for the visualization
+#' @return the output filepath for the visualization
 visualize_mpower_gait <- function(filepath){
     shape_sensor_data <- function(filepath){
         ts <- filepath %>%

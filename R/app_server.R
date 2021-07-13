@@ -29,7 +29,7 @@ app_server <- function( input, output, session ) {
   synapse_config <- config$synapse_opts
   survey_config <- parse_survey_opts(config$survey_opts)
   image_config <- config$image_opts
-  visualization_funs <-  golem::get_golem_options("funs")
+  visualization_funs <-  config$funs
   
   
   # define reactive values
@@ -121,7 +121,7 @@ app_server <- function( input, output, session ) {
         }
         
         # batch process filehandles
-        values$useDf <- batch_process_table_column_files(
+        values$useDf <- get_batch(
           syn = syn,
           all_data = values$allDf,
           curated_data = values$curatedDf,
@@ -273,10 +273,9 @@ app_server <- function( input, output, session ) {
     }else{
       # store survey input 
       values$useDf <- values$useDf %>%
-        survey_input_store(
+        store_inputs(
           curr_index = values$ii, 
           user_inputs = values$userInput,
-          survey_colnames = survey_config$survey_colnames,
           keep_metadata = synapse_config$keep_metadata,
           uid = synapse_config$uid
         )
@@ -305,7 +304,7 @@ app_server <- function( input, output, session ) {
         tmpI <- values$ii + 1
       }
       values$ii <- tmpI
-      values <- update_buttons(
+      values <- update_inputs(
         reactive_values = values,
         session = session, 
         curr_index = values$ii,
@@ -333,9 +332,8 @@ app_server <- function( input, output, session ) {
       )
     }else{
       values$useDf <- values$useDf %>%
-        survey_input_store(curr_index = values$ii, 
+        store_inputs(curr_index = values$ii, 
                            user_inputs = values$userInput,
-                           survey_colnames = survey_config$survey_colnames,
                            keep_metadata = synapse_config$keep_metadata,
                            uid = synapse_config$uid)
       callModule(mod_render_image_server, 
@@ -359,7 +357,7 @@ app_server <- function( input, output, session ) {
         tmpI <- values$useDf %>% nrow(.)
       }
       values$ii <- tmpI
-      values <- update_buttons(
+      values <- update_inputs(
         reactive_values = values,
         session = session, 
         curr_index = values$ii,
@@ -398,7 +396,7 @@ app_server <- function( input, output, session ) {
     )
     
     # save to synapse
-    store_tbl_to_synapse(
+    store_to_synapse(
       syn = syn,
       synapseclient = synapseclient,
       parent_id = synapse_config$output_parent_id,
@@ -444,7 +442,7 @@ app_server <- function( input, output, session ) {
       shinyjs::refresh()
     }else{
       # batch process filehandles
-      values$useDf <- batch_process_table_column_files(
+      values$useDf <- get_batch(
         syn = syn,
         all_data = values$allDf,
         curated_data = values$curatedDf,
@@ -461,7 +459,7 @@ app_server <- function( input, output, session ) {
       )
       
       # update buttons
-      values <- update_buttons(
+      values <- update_inputs(
         reactive_values = values,
         session = session, 
         curr_index = values$ii,

@@ -56,9 +56,9 @@ mod_survey_input_user_ui <- function(id){
             selected = "None Selected",
             choices = c(
               "None Selected",
-              seq(x$input_choices$choice_min, 
-                  x$input_choices$choice_max, 
-                  x$input_choices$increments)),
+              seq(x$input_choices$min, 
+                  x$input_choices$max, 
+                  x$input_choices$step)),
             grid = TRUE,
             force_edges = TRUE
           )
