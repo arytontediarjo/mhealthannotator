@@ -235,7 +235,7 @@ mpower_gait_checks:
             - "deviceMotion_walking_outbound.json.items"
         uid: 
             - "recordId"
-        n_batch: 5
+        n_batch: 50
         keep_metadata:
             - "healthCode"
             - "createdOn"
