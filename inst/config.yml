@@ -7,7 +7,6 @@ default:
 
 # all buttons and used for testing purposes
 testing:
-    funs: "visualize_photo"
     synapse_opts:
         output_parent_id: 
             - "syn25614357"
@@ -71,7 +70,6 @@ testing:
 
 # psorcast plaque configuration
 psorcast_plaque:
-    funs: "visualize_photo"
     synapse_opts:
         output_parent_id: 
             - "syn25614357"
@@ -136,7 +134,6 @@ psorcast_plaque:
 
 # psorcast hand omaging configuration
 psorcast_hand_imaging:
-    funs: "visualize_photo"
     synapse_opts:
         output_parent_id: 
             - "syn25614059"
@@ -183,7 +180,6 @@ psorcast_hand_imaging:
         
 # mpower gait
 mpower_gait:
-    funs: "visualize_mpower_gait"
     synapse_opts:
         output_parent_id: 
             - "syn24986703"
@@ -245,6 +241,7 @@ mpower_gait_checks:
             - "createdOn"
             - "phoneInfo"
             - "diagnosis"
+            - "walking"
         sort_keys: NULL
     survey_opts:
         survey_1:
