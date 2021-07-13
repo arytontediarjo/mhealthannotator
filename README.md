@@ -2,7 +2,7 @@
 Mhealthannotator is a RShiny-as-a-service App for visualizing Files in Synapse Tables used @Sage Bionetworks. 
 
 ## About
-This app's purpose is to help researchers be able to build RShiny Annotations Apps more seamlessly. 
+This app's purpose is to help researchers/engineers/analyst be able to spin up <b> Image Label Annotations </b> App more seamlessly through using RShiny as its core UI/UX.
 
 It will help interact with Synapse by providing: 
 
