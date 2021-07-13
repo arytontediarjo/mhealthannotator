@@ -21,7 +21,6 @@ get_table_string_filters <- function(uid){
 #' files according to input batch, and process using desired function
 #' 
 #' @param data containing un-annotated data based on each user
-#' @inheritParams batch_process_table_column_files
 #' @return unannotated data based on previously stored records
 get_session_images <- function(data, syn, synapse_tbl_id, 
                                filehandle_cols, uid, 

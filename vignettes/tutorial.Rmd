@@ -1,0 +1,19 @@
+---
+title: "Introduction to mhealthannotator"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mhealthannotator}
+  %\VignetteEngine{knitr::knitr}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, warning = FALSE}
+library(mhealthannotator)
+```

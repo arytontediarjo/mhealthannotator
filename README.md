@@ -1,7 +1,14 @@
 # mhealthannotator
+Mhealthannotator is a RShiny-as-a-service App for visualizing Files in Synapse Tables used @Sage Bionetworks. 
 
 ## About
-This R-Shiny Package is a tool that will be used to parse in <b>Synapse Table Files</b> and visualize it in an Shiny App. User will have the freedom to choose where they would like to store their annotations and what kind of input buttons they would like to have for the app.
+This app's purpose is to help researchers be able to build RShiny Annotations Apps more seamlessly. 
+
+It will help interact with Synapse by providing: 
+a. Configuration files: 
+    - containing information to interact with synapse
+    - containing information to the RShiny App UI/UX
+b. Visuallization functions
 
 ## Installation
 Current package is not distributed via CRAN but will be installable through Github as we are doing further testing and future use-cases.

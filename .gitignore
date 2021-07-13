@@ -46,3 +46,6 @@ dir/*
 
 # ignore dev
 dev/*
+inst/doc
+doc
+Meta
