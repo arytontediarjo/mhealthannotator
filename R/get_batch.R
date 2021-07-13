@@ -38,17 +38,23 @@ get_batch <- function(syn, all_data, curated_data,
                       visualization_funs,
                       sort_keys = NULL){
   
-  # check sorting
-  if(is.null(sort_keys)){
-    sort_keys <- uid
-  }
-  
   # get unannotated data and corresponding filehandleids
-  all_data %>%
+  result <- all_data %>%
     dplyr::anti_join(
       curated_data,
-      by = c(uid, "fileColumnName")) %>%
-    
+      by = c(uid, "fileColumnName"))
+  
+  # sort option 
+  if(!is.null(sort_keys)){
+    if(sort_keys == "random"){
+      result <- result %>% sample_n(size = nrow(.))
+    }else{
+      result <- result %>%
+        dplyr::arrange(!!sym(sort_keys))
+    }
+  }
+  
+ result %>%
     # get unannotated files from synapse
     get_session_images(
       syn = syn,
@@ -75,6 +81,5 @@ get_batch <- function(syn, all_data, curated_data,
         survey_colnames, function(x){
         tibble(!!sym(x) := as.character(NA))
       }))) %>%
-    dplyr::mutate(annotationTimestamp = NA_character_) %>%
-    dplyr::arrange(!!sym(sort_keys))
+    dplyr::mutate(annotationTimestamp = NA_character_)
 }

@@ -242,7 +242,7 @@ mpower_gait_checks:
             - "phoneInfo"
             - "diagnosis"
             - "walking"
-        sort_keys: NULL
+        sort_keys: "random"
     survey_opts:
         survey_1:
             colname: "walk_status"
