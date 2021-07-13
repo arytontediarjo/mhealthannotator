@@ -12,9 +12,6 @@ run_app <- function(config, funs) {
       ui = app_ui, 
       server = app_server
     ), 
-    golem_opts = list(
-      config = config,
-      funs = funs
-    )
+    golem_opts = list(config = config, funs = funs)
   )
 }

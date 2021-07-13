@@ -1,3 +1,15 @@
+#' function to parse initial selection
+#' place null if user is not giving any input
+#' @param input user input
+parse_initial_selection <- function(input){
+    if(is.null(input)){
+        character(0)
+    }else{
+        input
+    }
+}
+
+
 #' Function to parse selection (single/multiple)
 #' @param row_input input from user
 #' @param selected previously selected
@@ -35,7 +47,7 @@ parse_slider_value <- function(row_input, selected){
 #' @param curr_index access current index
 #' @param config access annotator config file
 #' @return
-update_buttons <- function(reactive_values,
+update_inputs <- function(reactive_values,
                            session, 
                            curr_index,
                            config){

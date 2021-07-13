@@ -19,6 +19,7 @@ mod_survey_input_user_ui <- function(id){
   #' read config file
   config_path <- file.path(golem::get_golem_options("config"))
   survey_config <- config::get(file = config_path) %>% .$survey_opts
+  check_survey_config(survey_config)
   
   #' create based on config
   tagList(
@@ -55,9 +56,9 @@ mod_survey_input_user_ui <- function(id){
             selected = "None Selected",
             choices = c(
               "None Selected",
-              seq(x$input_choices$choice_min, 
-                  x$input_choices$choice_max, 
-                  x$input_choices$increments)),
+              seq(x$input_choices$min, 
+                  x$input_choices$max, 
+                  x$input_choices$step)),
             grid = TRUE,
             force_edges = TRUE
           )

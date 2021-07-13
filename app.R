@@ -3,6 +3,5 @@
 # Or use the blue button on top of this file
 pkgload::load_all()
 options("golem.app.prod" = TRUE)
-mhealthannotator::run_app(
-    config = "inst/mpower_gait_config.yml",
-    funs = visualize_mpower_gait) # add parameters here (if any)
+mhealthannotator::run_app(funs = ...,
+                          config = ...) # add parameters here (if any)

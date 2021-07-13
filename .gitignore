@@ -37,3 +37,15 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# ignore dir
+dir/*
+
+#ignore Rproj
+*.Rproj
+
+# ignore dev
+dev/*
+inst/doc
+doc
+Meta
