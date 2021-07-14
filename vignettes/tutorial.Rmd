@@ -14,6 +14,17 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Overview
+
+mhealthannotator is used as a dashboard-as-a-service that can interact easily with Synapse through parsing File Attachments in Synapse Tables.
+
+## Load libraries
 ```{r setup, warning = FALSE}
 library(mhealthannotator)
 ```
+
+
+## An example of 
+
+
+## Use mhealthannotattor

@@ -1,0 +1,19 @@
+---
+title: "creating_config"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{creating_config}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mhealthannotator)
+```
