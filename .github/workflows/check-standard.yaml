@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - gh_action
   pull_request:
     branches:
       - main
