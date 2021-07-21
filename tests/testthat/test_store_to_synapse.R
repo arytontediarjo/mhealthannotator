@@ -2,9 +2,9 @@
 syn_objs <- attempt_instantiate()
 syn <- syn_objs$syn
 synapseclient <- syn_objs$synapseclient
-tryCatch(
-    attempt_login(syn),
-    error = function(e) {
+tryCatch({
+    attempt_login(syn)
+    }, error = function(e) {
         print(glue::glue("Did not log into Synapse: {e$message}"))
     }
 )

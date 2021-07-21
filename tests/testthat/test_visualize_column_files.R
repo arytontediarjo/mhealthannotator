@@ -28,22 +28,25 @@ test_funs <- function(filePath){
     return(output)
 }
 
+clean_test_dir <- function(){
+    purrr::walk(list.files("."), function(file){
+        if(!stringr::str_detect(file, "^test.*.R$")){
+            unlink(file)
+        }
+    })
+    unlink("output", recursive = TRUE)
+                
+}
 
 #' check if get source table results to a dataframe
 test_that("visualize_column_files returns desired filepath output", {
     output_dir <- "output"
-    dir.create(output_dir)
+    dir.create(output_dir, showWarnings = FALSE)
     test_data <- create_samples(5) %>%
-        dplyr::mutate(
-            basePath = purrr::map_chr(
-                filePath, function(fp){
-                    file.copy(fp, output_dir)
-                    return(basename(fp))}),
-            imagePath = file.path(output_dir, basePath),
-            imagePath = purrr::map_chr(
-                imagePath, .f = test_funs))
+        visualize_column_files(test_funs, output_dir)
     output_target <- purrr::map_chr(test_data$imagePath, ~basename(.x))
     output_files <- list.files(output_dir)
-    expect_equal(output_target,output_files)
+    expect_equal(output_target, output_files)
+    clean_test_dir()
 })
 
