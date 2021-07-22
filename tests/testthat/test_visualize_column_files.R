@@ -16,14 +16,14 @@ create_samples <- function(n){
 }
 
 test_funs <- function(filePath){
-    output <- file.path(
+    output_filepath <- file.path(
         glue::glue(gsub(
             "\\.tsv$", "", 
             filePath), ".jpg"))
     fread(filePath) %>%
         ggplot(aes(x = t, y = x)) + 
         geom_line() +
-        ggsave(output)
+        ggsave(path = output_filepath)
     unlink(filePath)
     return(output)
 }
