@@ -1,3 +1,10 @@
+#' @title Get Synapse Config
+#' 
+#' @description This is a helper to validate synapse configurations
+#' and see whether user has the right inputs for the Shiny App
+#' 
+#' @param config config
+#' @return config file/error messages if config file is invalid
 check_synapse_config <- function(config){
     #'  check synapse config
     tryCatch({
@@ -26,7 +33,14 @@ check_synapse_config <- function(config){
     })
 }
 
-#' restrict survey type to several
+#' @title Get Survey Config
+#' 
+#' @description This is a helper to validate shiny App survey buttons 
+#' configurations and see whether user has the 
+#' right inputs for the Shiny App
+#' 
+#' @param config config
+#' @return config file/error messages if config file is invalid
 check_survey_config <- function(config){
     available_button_types <- c("radio", 
                                 "slider",

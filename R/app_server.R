@@ -75,7 +75,8 @@ app_server <- function( input, output, session ) {
         # update data after updating session
         values$currentAnnotator <- syn$getUserProfile()$userName
         values$fileName <-glue::glue(
-          "{annotator}_{filename}",filename = synapse_config$output_filename,
+          "{annotator}_{filename}",
+          filename = synapse_config$output_filename,
           annotator = values$currentAnnotator)
         
         # create log directory

@@ -2,10 +2,18 @@
 % Please edit documentation in R/check_config.R
 \name{check_synapse_config}
 \alias{check_synapse_config}
-\title{check synapse config}
+\title{Get Synapse Config}
 \usage{
 check_synapse_config(config)
 }
+\arguments{
+\item{config}{config}
+}
+\value{
+config file/error messages if config file is invalid
+ check synapse config
+}
 \description{
-check synapse config
+This is a helper to validate synapse configurations
+and see whether user has the right inputs for the Shiny App
 }

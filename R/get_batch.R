@@ -19,11 +19,9 @@
 #' @param sort_keys sorting keys
 #' 
 #' @import tibble
-#' @import magrittr
-#' @import dplyr
+#' @importFrom magrittr `%>%`
 #' @import purrr
 #' @import tidyr
-#' @import glue
 #' 
 #' @return a dataframe containing processed 
 #' Table column files that will be used
@@ -33,9 +31,11 @@
 get_batch <- function(syn, all_data, curated_data, 
                       synapse_tbl_id, filehandle_cols, 
                       uid, survey_colnames,
-                      keep_metadata, n_batch,
-                      output_location, cache_location,
+                      n_batch,
+                      output_location, 
                       visualization_funs,
+                      cache_location,
+                      keep_metadata = NULL,
                       sort_keys = NULL){
   
   # get unannotated data and corresponding filehandleids
