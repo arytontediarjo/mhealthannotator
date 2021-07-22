@@ -20,10 +20,10 @@ test_funs <- function(filePath){
         glue::glue(gsub(
             "\\.tsv$", "", 
             filePath), ".jpg"))
-    fread(filePath) %>%
+    plot <- fread(filePath) %>%
         ggplot(aes(x = t, y = x)) + 
-        geom_line() +
-        ggsave(filename = output_filepath)
+        geom_line()
+    ggsave(filename = output_filepath, plot = plot)
     unlink(filePath)
     return(output_filepath)
 }
