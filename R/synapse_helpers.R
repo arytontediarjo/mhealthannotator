@@ -5,7 +5,7 @@ attempt_instantiate <- function() {
     if (reticulate::py_module_available("synapseclient")) {
         return(synapseclient$Synapse())
     } else {
-        skip("synapseclient not available for testing")
+        return(NULL)
     }
 }
 
