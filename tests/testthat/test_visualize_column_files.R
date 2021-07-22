@@ -23,9 +23,9 @@ test_funs <- function(filePath){
     fread(filePath) %>%
         ggplot(aes(x = t, y = x)) + 
         geom_line() +
-        ggsave(path = output_filepath)
+        ggsave(filename = output_filepath)
     unlink(filePath)
-    return(output)
+    return(output_filepath)
 }
 
 clean_test_dir <- function(){
