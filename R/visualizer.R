@@ -7,6 +7,8 @@
 #' @import patchwork
 #' @importFrom magrittr "%>%"
 #' 
+#' @export
+#' 
 #' @param filepath the corresponding filepath being used
 #' 
 #' @return the output filepath for the visualization
@@ -204,6 +206,22 @@ visualize_device_motion <- function(filepath){
     return(output_filename)
 }
 
+
+
+#' @title function to parse in .png or .jpeg image
+#' 
+#' @description this function is used to visualize a 
+#' filepath for image Files in a Synapse table
+#' 
+#' @import ggplot2
+#' @import patchwork
+#' @importFrom magrittr "%>%"
+#' 
+#' @export
+#' 
+#' @param filepath the corresponding filepath being used
+#' 
+#' @return the output filepath for the visualization
 visualize_photo <- function(filepath){
     if(tools::file_ext(filepath) == "png"){
         new_filepath <- sub('\\.png$', '.jpg', filepath)
