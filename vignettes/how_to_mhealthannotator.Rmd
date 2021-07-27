@@ -3,7 +3,7 @@ title: "Introduction to mhealthannotator"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{mhealthannotator}
+  %\VignetteIndexEntry{how_to_mhealthannotator}
   %\VignetteEngine{knitr::knitr}
 ---
 
@@ -18,7 +18,13 @@ knitr::opts_chunk$set(
 
 mhealthannotator is used as a dashboard-as-a-service that can interact easily with Synapse through parsing File Attachments in Synapse Tables. It gives user the flexibility to parse config file and a custom visualization function to a given filepath.
 
-## Load libraries
+## Installing 
+```{r eval = FALSE}
+devtools::install_github("Sage-Bionetworks/mhealthannotator")
+```
+
+
+## Load Library
 ```{r setup, warning = FALSE}
 library(mhealthannotator)
 ```
@@ -28,8 +34,9 @@ library(mhealthannotator)
 
 ### 1. Create Visualization Function
 
-To create a visualization function, our expected input is any parse-able data json, jpeg etc. And output will a filepath to the processed files.
-```{r}
+To create a visualization function, expected input is any parse-able data json, jpeg etc. And output will a filepath to the processed files.
+
+```{r eval=FALSE}
 ## a good and simple example is to make a function that takes in filepath
 ## and convert to jpeg if image is png format
 visualize_photo <- function(filepath){
@@ -48,6 +55,7 @@ visualize_photo <- function(filepath){
 ### 2. Create Configuration File
 
 To create a config file, the app will accept .yml files containing key-values pair. You can refer to create_config vignette for more info on how to write the configurations file.
+
 ```{r eval=FALSE}
 # template to use for config file
 default:
@@ -117,6 +125,7 @@ default:
 ### 3. Run your App using the config and visualization function
 
 To run the app, you will only require two parameters, which is the configurations file and your desired function. 
+
 ```{r eval=FALSE}
 mhealthannotator::run_app(
     config = "/path/to/config/file",
