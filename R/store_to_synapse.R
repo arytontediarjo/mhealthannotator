@@ -8,7 +8,7 @@
 #' @param current_annotator current annotator as file prefix
 #' @param output_filename name of the data output
 #' @param ... additional info, will be used for provenance
-#' @return 
+#' @return saved File Entity in Synapse
 store_to_synapse <- function(syn, 
                              synapseclient, parent_id,
                              new_data, stored_data, 

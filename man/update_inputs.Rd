@@ -18,7 +18,7 @@ update_inputs(reactive_values, session, curr_index, config)
 \item{config}{access annotator config file}
 }
 \value{
-dataframe with updated inputs
+updated dataframe with input
 }
 \description{
 Function to update user input shiny buttons by
