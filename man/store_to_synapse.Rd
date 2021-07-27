@@ -33,7 +33,7 @@ store_to_synapse(
 \item{...}{additional info, will be used for provenance}
 }
 \value{
-
+saved file in synapse
 }
 \description{
 Function to store annotator's table to synapse
