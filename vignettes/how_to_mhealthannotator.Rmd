@@ -128,7 +128,7 @@ To run the app, you will only require two parameters, which is the configuration
 
 ```{r eval=FALSE}
 mhealthannotator::run_app(
-    config = "/path/to/config/file",
+    config = "config.yml",
     funs = visualize_photo
 )
 ```
