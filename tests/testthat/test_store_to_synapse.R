@@ -1,7 +1,4 @@
-#' test case for get source table
-syn_objs <- attempt_instantiate()
-syn <- syn_objs$syn
-synapseclient <- syn_objs$synapseclient
+syn <- attempt_instantiate()
 tryCatch(
     attempt_login(syn),
     error = function(e) {
@@ -9,6 +6,7 @@ tryCatch(
     }
 )
 Sys.setenv(R_CONFIG_ACTIVE = "testing")
+
 
 #' check if get source table results to a dataframe
 test_that("get_source_table returns a data frame", {

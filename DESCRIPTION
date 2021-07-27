@@ -18,12 +18,12 @@ Imports:
     pkgload,
     tibble,
     magrittr,
+    data.table,
     dplyr,
     tidyr,
     shinyFeedback,
     shinyWidgets,
     purrr,
-    data.table,
     reticulate,
     waiter,
     lubridate,
@@ -36,11 +36,13 @@ Imports:
     jsonlite,
     png,
     stringr,
-    here
+    here,
+    readr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Suggests: 
+    markdown,
     rmarkdown,
     knitr,
     testthat (>= 3.0.0)

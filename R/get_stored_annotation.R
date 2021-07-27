@@ -6,9 +6,9 @@
 #' build an empty dataframe
 #' 
 #' @import tibble
-#' @import magrittr
 #' @import purrr
-#' @import data.table
+#' @importFrom data.table fread
+#' @importFrom magrittr `%>%`
 #' 
 #' @param syn synapseclient
 #' @param parent_id synapse parent Id

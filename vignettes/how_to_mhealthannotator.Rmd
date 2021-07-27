@@ -1,0 +1,135 @@
+---
+title: "Introduction to mhealthannotator"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{how_to_mhealthannotator}
+  %\VignetteEngine{knitr::knitr}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Overview
+
+mhealthannotator is used as a dashboard-as-a-service that can interact easily with Synapse through parsing File Attachments in Synapse Tables. It gives user the flexibility to parse config file and a custom visualization function to a given filepath.
+
+## Installing 
+```{r eval = FALSE}
+devtools::install_github("Sage-Bionetworks/mhealthannotator")
+```
+
+
+## Load Library
+```{r setup, warning = FALSE}
+library(mhealthannotator)
+```
+
+
+## Mhealthannotator Usage
+
+### 1. Create Visualization Function
+
+To create a visualization function, expected input is any parse-able data json, jpeg etc. And output will a filepath to the processed files.
+
+```{r eval=FALSE}
+## a good and simple example is to make a function that takes in filepath
+## and convert to jpeg if image is png format
+visualize_photo <- function(filepath){
+    if(tools::file_ext(filepath) == "png"){
+        new_filepath <- sub('\\.png$', '.jpg', filepath)
+        png_mat <- png::readPNG(filepath)
+        jpeg::writeJPEG(png_mat, target = new_filepath, quality = 1)
+        file.remove(filepath)
+        return(new_filepath)
+    }else{
+        return(filepath)
+    }
+}
+```
+
+### 2. Create Configuration File
+
+To create a config file, the app will accept .yml files containing key-values pair. You can refer to create_config vignette for more info on how to write the configurations file.
+
+```{r eval=FALSE}
+# template to use for config file
+default:
+    synapse_opts:
+        output_parent_id: 
+            - "syn25614357"
+        synapse_tbl_id: 
+            - "syn22281748" 
+        output_filename: 
+            - "psoriasis_plaque_annotations.tsv"
+        filehandle_cols:
+            - "psoriasisAreaPhoto.jpg"
+            - "psoriasisAreaPhoto.png"
+        uid: 
+            - "recordId" # unique identifier for that file in synapse table
+        n_batch: 5
+        keep_metadata:
+            - "participantId"
+            - "createdOn"
+        sort_keys:
+            - "recordId" # optional
+    survey_opts:
+        survey_1:
+                colname: "PGA"
+                type: "radio"
+                prompt: "PGA:"
+                input_choices:
+                    0: 0
+                    1: 1
+                    2: 2
+                    3: 3
+                    4: 4
+                    Cannot Tell: "Cannot Tell"
+        survey_2:
+            colname: "erythema"
+            type: "checkbox_group"
+            prompt: "Erythema:"
+            input_choices:
+                0: 0
+                1: 1
+                2: 2
+                3: 3
+                4: 4
+                Cannot Tell: "Cannot Tell"
+        survey_3:
+            colname: "induration"
+            type: "slider"
+            prompt: "Induration:"
+            input_choices:
+                min: 0
+                max: 5
+                step: 1
+        survey_4:
+            colname: "scaling"
+            type: "slider"
+            prompt: "Scaling:"
+            input_choices:
+                min: 0
+                max: 5
+                step: 1
+    image_opts:
+        width: "auto"
+        height: "auto"
+```
+
+
+### 3. Run your App using the config and visualization function
+
+To run the app, you will only require two parameters, which is the configurations file and your desired function. 
+
+```{r eval=FALSE}
+mhealthannotator::run_app(
+    config = "/path/to/config/file",
+    funs = visualize_photo
+)
+```
+

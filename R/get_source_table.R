@@ -5,7 +5,6 @@
 #' columns
 #' 
 #' @import tibble
-#' @import glue
 #' @import config
 #' 
 #' 

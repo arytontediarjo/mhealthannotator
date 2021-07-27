@@ -12,11 +12,11 @@ get_batch(
   filehandle_cols,
   uid,
   survey_colnames,
-  keep_metadata,
   n_batch,
   output_location,
-  cache_location,
   visualization_funs,
+  cache_location,
+  keep_metadata = NULL,
   sort_keys = NULL
 )
 }
@@ -35,15 +35,15 @@ get_batch(
 
 \item{survey_colnames}{the column for storing survey input}
 
-\item{keep_metadata}{metadata to keep from the table}
-
 \item{n_batch}{number of batch per session}
 
 \item{output_location}{where to store processed files}
 
+\item{visualization_funs}{function to visualize data}
+
 \item{cache_location}{where to find raw files}
 
-\item{visualization_funs}{function to visualize data}
+\item{keep_metadata}{metadata to keep from the table}
 
 \item{sort_keys}{sorting keys}
 }

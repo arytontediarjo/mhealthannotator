@@ -21,11 +21,22 @@ get_table_string_filters <- function(uid){
 #' files according to input batch, and process using desired function
 #' 
 #' @param data containing un-annotated data based on each user
+#' @param syn synapse object
+#' @param synapse_tbl_id synapse table id
+#' @param filehandle_cols table filehandles
+#' @param uid unique ID of images/plot/graphs
+#' @param n_batch number of images/plot/graphs per annotation session
+#' @param cache_location where to cache each user annotations
+#' @param keep_metadata metadata to keep
 #' @return unannotated data based on previously stored records
-get_session_images <- function(data, syn, synapse_tbl_id, 
-                               filehandle_cols, uid, 
-                               keep_metadata, n_batch,
-                               cache_location){
+get_session_images <- function(data, 
+                               syn, 
+                               synapse_tbl_id, 
+                               filehandle_cols, 
+                               uid, 
+                               n_batch,
+                               cache_location,
+                               keep_metadata = NULL){
     
     # set cache location
     syn$cache$cache_root_dir <- cache_location

@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - gh_action
   pull_request:
     branches:
       - main
@@ -68,6 +69,36 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
+        
+      - name: Install Miniconda
+        run: |
+          Rscript -e "remotes::install_github('rstudio/reticulate')"
+          Rscript -e "reticulate::install_miniconda()"
+      - name: Add Miniconda to .Rprofile on macOS
+        if: runner.os == 'macOS'
+        run: echo "options(reticulate.conda_binary = reticulate:::miniconda_conda())" >> .Rprofile
+
+      - name: Install Python deps
+        run: |
+          Rscript -e "reticulate::py_discover_config()"
+          Rscript -e "reticulate::py_install(c('pandas', 'numpy', 'boto3', 'synapseclient'), pip = TRUE)"
+      
+      - name: Setup Synapse config file for testing
+        if: runner.os != 'Windows'
+        run: |
+          OUTPUT_FILE=~/.synapseConfig
+          cat > "$OUTPUT_FILE" << EOM
+          [authentication]
+          username = "${{ secrets.SYNAPSE_USER }}"
+          apikey = "${{ secrets.SYNAPSE_APIKEY}}"
+          EOM
+          chmod +x "$OUTPUT_FILE"
+          
+      - name: Setup Synapse config file for testing (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          "[authentication]`nusername = ${{ secrets.SYNAPSE_USER }}`napikey = ${{ secrets.SYNAPSE_APIKEY}}" | Out-File -FilePath "$HOME\.synapseConfig"
+
 
       - name: Check
         env:
