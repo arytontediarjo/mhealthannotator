@@ -1,5 +1,5 @@
 ---
-title: "build_config_schema"
+title: "Building Configuration Schema"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{build_config_schema}
@@ -16,11 +16,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
-```{r setup}
-library(mhealthannotator)
-```
-
 
 ## Synapse Options Table Schema
 ```{r}
@@ -58,6 +53,21 @@ survey_opts <- tibble::tibble(
         "Button Types for Shiny App (Options: radio, checkbox_group, slider)",
         "Display for each annotation prompt in the Shiny App",
         "Named-list or vector for annotation options, key-value can be arbitrary; slider button type will take in min, max and step"))
+
+knitr::kable(survey_opts, format = "pipe")
+```
+
+## Image Options Table Schema
+
+Resizing rendered image will be based on ggplot/rmarkdown style, which is using character parameter for declaring the image pixels, percent to container or automatic (not preferred due to it can be rendered to big in the Shiny App).
+
+```{r}
+image_opts <- tibble::tibble(
+    Key = c("width", "heigth"),
+    Value = c("CHARACTER", "CHARACTER"),
+    Description = c(
+        "Width of the rendered image ('50px', '100%', 'auto' etc.)",
+        "Height of the rendered image ('50px', '100%', 'auto', etc.)"))
 
 knitr::kable(survey_opts, format = "pipe")
 ```
