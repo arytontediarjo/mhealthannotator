@@ -1,5 +1,9 @@
 #' function to parse survey question from the config file
+#' 
+#' @importFrom purrr set_names
+#' 
 #' @param config annotator config file being used 
+#' 
 #' @return named list of survey question and its options
 parse_survey_opts <- function(config){
     #' instantiate survey configuration

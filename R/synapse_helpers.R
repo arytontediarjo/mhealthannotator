@@ -3,8 +3,7 @@
 ## Try to get Synapse client object
 attempt_instantiate <- function() {
     if (reticulate::py_module_available("synapseclient")) {
-        return(list(synapseclient = synapseclient,
-                    syn = synapseclient$Synapse()))
+        return(synapseclient$Synapse())
     } else {
         return(NULL)
     }

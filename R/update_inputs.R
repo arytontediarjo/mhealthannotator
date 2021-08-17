@@ -46,7 +46,7 @@ parse_slider_value <- function(row_input, selected){
 #' @param session access shiny session
 #' @param curr_index access current index
 #' @param config access annotator config file
-#' @return
+#' @return updated dataframe with input
 update_inputs <- function(reactive_values,
                            session, 
                            curr_index,

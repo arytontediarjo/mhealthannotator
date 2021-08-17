@@ -10,13 +10,27 @@ get_session_images(
   synapse_tbl_id,
   filehandle_cols,
   uid,
-  keep_metadata,
   n_batch,
-  cache_location
+  cache_location,
+  keep_metadata = NULL
 )
 }
 \arguments{
 \item{data}{containing un-annotated data based on each user}
+
+\item{syn}{synapse object}
+
+\item{synapse_tbl_id}{synapse table id}
+
+\item{filehandle_cols}{table filehandles}
+
+\item{uid}{unique ID of images/plot/graphs}
+
+\item{n_batch}{number of images/plot/graphs per annotation session}
+
+\item{cache_location}{where to cache each user annotations}
+
+\item{keep_metadata}{metadata to keep}
 }
 \value{
 unannotated data based on previously stored records

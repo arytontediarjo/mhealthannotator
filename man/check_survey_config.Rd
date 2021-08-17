@@ -2,10 +2,18 @@
 % Please edit documentation in R/check_config.R
 \name{check_survey_config}
 \alias{check_survey_config}
-\title{restrict survey type to several}
+\title{Get Survey Config}
 \usage{
 check_survey_config(config)
 }
+\arguments{
+\item{config}{config}
+}
+\value{
+config file/error messages if config file is invalid
+}
 \description{
-restrict survey type to several
+This is a helper to validate shiny App survey buttons 
+configurations and see whether user has the 
+right inputs for the Shiny App
 }

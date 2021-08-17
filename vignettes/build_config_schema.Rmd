@@ -1,0 +1,73 @@
+---
+title: "Building Configuration Schema"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{build_config_schema}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## About
+This markdown entails the key-value pair (along with its description) required to build the valid config file for the Shiny App.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Synapse Options Table Schema
+```{r}
+synapse_opts <- tibble::tibble(
+    Key = c("output_parent_id","synapse_tbl_id",
+            "output_filename","filehandle_cols",
+            "uid","n_batch","keep_metadata","sort_keys"),
+    Value = c("CHARACTER","CHARACTER",
+              "CHARACTER", "LIST",
+              "LIST", "INTEGER",
+              "LIST", "LIST"),
+    Description = c("Synapse Parent ID for annotation output",
+                    "Synapse table id for querying filehandle",
+                    "Filename of annotation output, prefixed with Synapse username",
+                    "Filehandle Column name in Synapse Table",
+                    "Unique identifier of the file (i.e. recordId)",
+                    "Number of batch per App session (optional)",
+                    "Metadata to keep in interactive table (optional)",
+                    "Sorting keys for annotation Shiny App (optional)"))
+
+knitr::kable(synapse_opts, format = "pipe")
+```
+
+
+## Survey Options Table Schema
+```{r}
+survey_opts <- tibble::tibble(
+    Key = c("colname",
+            "type",
+            "prompt",
+            "input_choices"),
+    Value = c("CHARACTER", "CHARACTER", "CHARACTER", "LIST"),
+    Description = c(
+        "Column for storing annotations",
+        "Button Types for Shiny App (Options: radio, checkbox_group, slider)",
+        "Display for each annotation prompt in the Shiny App",
+        "Named-list or vector for annotation options, key-value can be arbitrary; slider button type will take in min, max and step"))
+
+knitr::kable(survey_opts, format = "pipe")
+```
+
+## Image Options Table Schema
+
+Resizing rendered image will be based on ggplot/rmarkdown style, which is using character parameter for declaring the image pixels, percent to container or automatic (not preferred due to it can be rendered to big in the Shiny App).
+
+```{r}
+image_opts <- tibble::tibble(
+    Key = c("width", "heigth"),
+    Value = c("CHARACTER", "CHARACTER"),
+    Description = c(
+        "Width of the rendered image ('50px', '100%', 'auto' etc.)",
+        "Height of the rendered image ('50px', '100%', 'auto', etc.)"))
+
+knitr::kable(survey_opts, format = "pipe")
+```
